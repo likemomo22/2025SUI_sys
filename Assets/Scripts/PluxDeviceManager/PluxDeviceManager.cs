@@ -660,6 +660,7 @@ public class PluxDeviceManager
     // Class method intended to find the list of detectable devices through Bluetooth communication.
     // domains -> Array of strings that defines which domains will be used while searching for PLUX devices 
     //            [Valid Options: "BTH" -> classic Bluetooth; "BLE" -> Bluetooth Low Energy; "USB" -> Through USB connection cable]
+    [Obsolete("Obsolete")]
     public void GetDetectableDevicesUnity(List<string> domains)
     {
         // Creation of new thread to manage the scanning stage.
@@ -673,6 +674,7 @@ public class PluxDeviceManager
     // Auxiliary function that manages the scanning process.
     // domains -> Array of strings that defines which domains will be used while searching for PLUX devices 
     //            [Valid Options: "BTH" -> classic Bluetooth; "BLE" -> Bluetooth Low Energy; "USB" -> Through USB connection cable]
+    [Obsolete("Obsolete")]
     private void ScanPluxDevs(List<string> domains)
     {
         try

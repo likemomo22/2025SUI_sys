@@ -11,7 +11,7 @@ namespace utils
 
         public void Init()
         {
-            string fileName = $"plux_raw_{System.DateTime.Now:yyyyMMdd_HHmmss}.csv";
+            string fileName = $"UserId_{GlobalText.UserId}___Type_{GlobalText.ExamType}.csv";
             filePath = Path.Combine(Application.persistentDataPath, fileName);
             buffer.Clear();
             buffer.Add("Frame,Channel1,Channel2"); // 可扩展为多通道

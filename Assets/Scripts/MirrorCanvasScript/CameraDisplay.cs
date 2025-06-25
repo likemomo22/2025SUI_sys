@@ -14,11 +14,13 @@ namespace MirrorCanvasScript
             WebCamDevice[] devices = WebCamTexture.devices;
             if (devices.Length > 0)
             {
+                Debug.Log("VAR");
                 string camName = devices[0].name;
                 _webCamTexture = new WebCamTexture(camName, 1280, 720, 30);
                 rawImage.texture = _webCamTexture;
                 rawImage.material.mainTexture = _webCamTexture;
                 _webCamTexture.Play();
+                Debug.Log("2");
 
                 rawImage.rectTransform.localScale = new Vector3(-1, 1, 1);
             }

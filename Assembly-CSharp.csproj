@@ -49,6 +49,7 @@
     <Compile Include="Assets\Scripts\PluxDeviceManager\utils\Channel.cs" />
     <Compile Include="Assets\Scripts\PluxController\PluxUIController.cs" />
     <Compile Include="Assets\Scripts\PluxDeviceManager\utils\TaskDistributer.cs" />
+    <Compile Include="Assets\utils\GlobalText.cs" />
     <Compile Include="Assets\MediaPipeUnity\Tutorial\Tasks\FaceLandmarkerRunner.cs" />
     <Compile Include="Assets\Scripts\MirrorCanvasScript\CameraDisplay.cs" />
     <Compile Include="Assets\Scripts\PluxDeviceManager\utils\TaskExtension.cs" />
@@ -56,10 +57,13 @@
     <Compile Include="Assets\utils\PluxDataProcessor.cs" />
     <Compile Include="Assets\Scripts\MuscleCircleManager\MuscleCircleManager.cs" />
     <Compile Include="Assets\Scripts\MuscleCircleController\MuscleCircleController.cs" />
+    <Compile Include="Assets\utils\ReadTextUtil.cs" />
     <Compile Include="Assets\utils\CsvLogger.cs" />
+    <Compile Include="Assets\utils\testGlobal.cs" />
     <Compile Include="Assets\Scripts\PluxDeviceManager\utils\ObjectExtension.cs" />
     <Compile Include="Assets\Scripts\PluxDeviceManager\utils\EnumerableExtension.cs" />
     <Compile Include="Assets\Scripts\PluxDeviceManager\utils\Dispatcher.cs" />
+    <Compile Include="Assets\Scripts\CanvasSwitcher\CanvasSwitcher.cs" />
     <Compile Include="Assets\MediaPipeUnity\Tutorial\Hello World\HelloWorld.cs" />
     <Compile Include="Assets\MediaPipeUnity\Tutorial\Custom Graph\FaceMeshLegacy.cs" />
     <Compile Include="Assets\Scripts\PluxDeviceManager\PluxDeviceManager.cs" />

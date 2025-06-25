@@ -27,6 +27,7 @@ namespace Mediapipe.Unity
         this.frameRate = frameRate;
       }
 
+      [Obsolete("Obsolete")]
       public ResolutionStruct(Resolution resolution)
       {
         width = resolution.width;
@@ -34,6 +35,7 @@ namespace Mediapipe.Unity
         frameRate = resolution.refreshRate;
       }
 
+      [Obsolete("Obsolete")]
       public Resolution ToResolution()
       {
         return new Resolution() { width = width, height = height, refreshRate = (int)frameRate };

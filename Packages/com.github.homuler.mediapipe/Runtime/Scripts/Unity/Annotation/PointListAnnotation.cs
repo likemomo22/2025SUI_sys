@@ -23,6 +23,7 @@ namespace Mediapipe.Unity
     
     public GameObject targetMuscleCube ;
     public GameObject subMuscleCube1 ;
+    public GameObject subMuscleCube2 ;
     
     void Awake()
     {
@@ -34,6 +35,10 @@ namespace Mediapipe.Unity
       if (subMuscleCube1 == null)
       {
         subMuscleCube1 = GameObject.Find("SubMuscleCircle1");
+      }
+      if (subMuscleCube2 == null)
+      {
+        subMuscleCube2 = GameObject.Find("SubMuscleCircle2");
       }
     }
     
@@ -109,19 +114,30 @@ namespace Mediapipe.Unity
       {
         CallActionForAll(targets, (annotation, target) =>
         {
-          if (annotation != null) {
+          if (annotation != null)
+          {
             annotation.Draw(in target, visualizeZ);
-            if (children.Count > 14 && children[14] != null)
+
+            // 确保 landmarks 数足够
+            if (children.Count > 15)
             {
-              // Debug.Log("children[14] 存在，更新位置");
-              targetMuscleCube.transform.position = children[14].transform.position;
+              // 点11（右肩）
+              targetMuscleCube.transform.position = children[11].transform.position;
+
+              // 点9 和 点11 的中点
+              var p9 = children[9].transform.position;
+              var p11 = children[11].transform.position;
+              subMuscleCube1.transform.position = (p9 + p11) / 2f;
+
+              // 点13 和 点15 的中点（右臂中部）
+              var p13 = children[13].transform.position;
+              var p15 = children[15].transform.position;
+              subMuscleCube2.transform.position = (p13 + p15) / 2f;
             }
             else
             {
-              Debug.LogWarning($"children[14] 不存在，当前 count = {children.Count}");
+              Debug.LogWarning($"Landmark 数量不足，当前 count = {children.Count}");
             }
-            subMuscleCube1.transform.position = children[12].transform.position;
-            // Debug.Log(targetMuscleCube.transform.position);
           }
         });
       }

@@ -34,10 +34,20 @@ namespace Utils
                 if (rawData[i] > 32768)
                 {
                     int fixedValue = rawData[i] - 32768;
+
+                    // ✅ type==2 且不是channel 1时（即i != 0），放大 1.25 倍
+                    if (GlobalText.ExamType == "2" && i != 0)
+                    {
+                        Debug.Log("raw: "+fixedValue);
+                        fixedValue = Mathf.RoundToInt(fixedValue * 10.0f);
+                        Debug.Log("after: "+fixedValue);
+                    }
+
                     channelProcessors[i].AddValue(fixedValue);
                 }
             }
         }
+
 
         public void Reset()
         {
