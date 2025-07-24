@@ -393,7 +393,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 107,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/UnityEngine.TestRunner.UnityAdditionalFile.txt"
@@ -2458,7 +2458,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 52301,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.UnityAdditionalFile.txt"
@@ -3140,7 +3140,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 99700,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/UnityEditor.TestRunner.UnityAdditionalFile.txt"
@@ -3831,7 +3831,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 158120,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.UnityAdditionalFile.txt"
@@ -4430,7 +4430,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 202982,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Mediapipe.Runtime.UnityAdditionalFile.txt"
@@ -5317,7 +5317,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 280209,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.EditorCoroutines.Editor.UnityAdditionalFile.txt"
@@ -5851,7 +5851,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 322670,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.Performance.Profile-Analyzer.Editor.UnityAdditionalFile.txt"
@@ -6414,7 +6414,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 367893,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.PlasticSCM.Editor.UnityAdditionalFile.txt"
@@ -7273,7 +7273,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 441621,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.Rider.Editor.UnityAdditionalFile.txt"
@@ -7825,7 +7825,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 486083,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.Settings.Editor.UnityAdditionalFile.txt"
@@ -8368,7 +8368,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 529237,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.TestTools.CodeCoverage.Editor.OpenCover.Model.UnityAdditionalFile.txt"
@@ -8913,7 +8913,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 573250,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.UnityAdditionalFile.txt"
@@ -9447,7 +9447,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 616033,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.TextMeshPro.UnityAdditionalFile.txt"
@@ -10021,7 +10021,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 661738,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.Timeline.UnityAdditionalFile.txt"
@@ -10609,7 +10609,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 708472,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.VSCode.Editor.UnityAdditionalFile.txt"
@@ -11147,7 +11147,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 751248,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.VisualScripting.Core.UnityAdditionalFile.txt"
@@ -12091,7 +12091,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 845519,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.VisualStudio.Editor.UnityAdditionalFile.txt"
@@ -12644,7 +12644,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 889903,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Mediapipe.Tests.EditMode.UnityAdditionalFile.txt"
@@ -13182,7 +13182,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 932855,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Mediapipe.Unity.Sample.UnityAdditionalFile.txt"
@@ -13748,7 +13748,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 977192,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.CollabProxy.Editor.UnityAdditionalFile.txt"
@@ -14301,7 +14301,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 1019503,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.TestTools.CodeCoverage.Editor.UnityAdditionalFile.txt"
@@ -14924,7 +14924,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 1065591,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.TextMeshPro.Editor.UnityAdditionalFile.txt"
@@ -15524,7 +15524,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 1112210,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.Timeline.Editor.UnityAdditionalFile.txt"
@@ -16348,7 +16348,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 1178444,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.VisualScripting.Core.Editor.UnityAdditionalFile.txt"
@@ -17370,7 +17370,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 1277187,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.VisualScripting.Flow.UnityAdditionalFile.txt"
@@ -18291,7 +18291,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 1366857,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.VisualScripting.Flow.Editor.UnityAdditionalFile.txt"
@@ -19038,7 +19038,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 1429642,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.VisualScripting.State.UnityAdditionalFile.txt"
@@ -19592,7 +19592,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 1473794,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.VisualScripting.SettingsProvider.Editor.UnityAdditionalFile.txt"
@@ -20188,7 +20188,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 1518011,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.VisualScripting.State.Editor.UnityAdditionalFile.txt"
@@ -20806,7 +20806,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 1568965,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Unity.VisualScripting.Shared.Editor.UnityAdditionalFile.txt"
@@ -21379,7 +21379,7 @@
       "ActionType": "WriteFile",
       "PayloadOffset": 1612210,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp.UnityAdditionalFile.txt"
@@ -21391,7 +21391,7 @@
       "DisplayName": "Writing Assembly-CSharp.rsp",
       "ActionType": "WriteFile",
       "PayloadOffset": 1612323,
-      "PayloadLength": 34229,
+      "PayloadLength": 34282,
       "PayloadDebugContentSnippet": "-target:library\n-out:\"Library/",
       "Inputs": [],
       "Outputs": [
@@ -21403,7 +21403,7 @@
       "Annotation": "WriteText Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp.rsp2",
       "DisplayName": "Writing Assembly-CSharp.rsp2",
       "ActionType": "WriteFile",
-      "PayloadOffset": 1646639,
+      "PayloadOffset": 1646692,
       "PayloadLength": 0,
       "PayloadDebugContentSnippet": "",
       "Inputs": [],
@@ -21673,12 +21673,13 @@
         "Assets/Scripts/PluxDeviceManager/utils/Thread.cs",
         "Assets/Scripts/PluxDeviceManager/utils/UnityThreadHelper.cs",
         "Assets/Scripts/PluxDeviceManager/utils/WaitOneExtension.cs",
+        "Assets/Scripts/SetIdType/SetIdType.cs",
+        "Assets/Scripts/SetMaxValue/SetMaxValue.cs",
         "Assets/utils/ChannelProcessor.cs",
         "Assets/utils/CsvLogger.cs",
         "Assets/utils/GlobalText.cs",
         "Assets/utils/MathUtils.cs",
         "Assets/utils/PluxDataProcessor.cs",
-        "Assets/utils/ReadTextUtil.cs",
         "Assets/utils/testGlobal.cs",
         "C:/Program Files/Unity/Hub/Editor/2022.3.56f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll",
         "C:/Program Files/Unity/Hub/Editor/2022.3.56f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll",
@@ -21920,7 +21921,7 @@
       "Annotation": "WriteText Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp.dll.mvfrm.rsp",
       "DisplayName": "Writing Assembly-CSharp.dll.mvfrm.rsp",
       "ActionType": "WriteFile",
-      "PayloadOffset": 1646735,
+      "PayloadOffset": 1646788,
       "PayloadLength": 9366,
       "PayloadDebugContentSnippet": "Library\\Bee\\artifacts\\mvdfrm\\U",
       "Inputs": [],
@@ -22165,9 +22166,9 @@
       "Annotation": "WriteText Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.UnityAdditionalFile.txt",
       "DisplayName": "Writing Assembly-CSharp-Editor.UnityAdditionalFile.txt",
       "ActionType": "WriteFile",
-      "PayloadOffset": 1656214,
+      "PayloadOffset": 1656267,
       "PayloadLength": 27,
-      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver1",
+      "PayloadDebugContentSnippet": "C:\\Users\\munek\\2025SUI_ver2",
       "Inputs": [],
       "Outputs": [
         "Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.UnityAdditionalFile.txt"
@@ -22178,7 +22179,7 @@
       "Annotation": "WriteText Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.rsp",
       "DisplayName": "Writing Assembly-CSharp-Editor.rsp",
       "ActionType": "WriteFile",
-      "PayloadOffset": 1656334,
+      "PayloadOffset": 1656387,
       "PayloadLength": 35291,
       "PayloadDebugContentSnippet": "-target:library\n-out:\"Library/",
       "Inputs": [],
@@ -22191,7 +22192,7 @@
       "Annotation": "WriteText Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.rsp2",
       "DisplayName": "Writing Assembly-CSharp-Editor.rsp2",
       "ActionType": "WriteFile",
-      "PayloadOffset": 1691719,
+      "PayloadOffset": 1691772,
       "PayloadLength": 0,
       "PayloadDebugContentSnippet": "",
       "Inputs": [],
@@ -22522,7 +22523,7 @@
       "Annotation": "WriteText Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll.mvfrm.rsp",
       "DisplayName": "Writing Assembly-CSharp-Editor.dll.mvfrm.rsp",
       "ActionType": "WriteFile",
-      "PayloadOffset": 1691822,
+      "PayloadOffset": 1691875,
       "PayloadLength": 10234,
       "PayloadDebugContentSnippet": "Library\\Bee\\artifacts\\mvdfrm\\U",
       "Inputs": [],
@@ -23746,7 +23747,7 @@
     {
       "Annotation": "BuildPlayerDataGenerator Library/BuildPlayerData/Editor/TypeDb-All.json",
       "DisplayName": "BuildPlayerDataGenerator TypeDb-All",
-      "Action": "\"C:/Program Files/Unity/Hub/Editor/2022.3.56f1/Editor/Data\\Tools\\netcorerun\\netcorerun.exe\" \"C:/Program Files/Unity/Hub/Editor/2022.3.56f1/Editor/Data/Tools/BuildPlayerDataGenerator/BuildPlayerDataGenerator.exe\" -a=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\ScriptAssemblies\\Assembly-CSharp.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\ScriptAssemblies\\Mediapipe.Runtime.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\ScriptAssemblies\\Mediapipe.Unity.Sample.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\ScriptAssemblies\\Unity.TextMeshPro.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\ScriptAssemblies\\Unity.Timeline.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\ScriptAssemblies\\Unity.VisualScripting.Core.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\ScriptAssemblies\\Unity.VisualScripting.Flow.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\ScriptAssemblies\\Unity.VisualScripting.State.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\ScriptAssemblies\\UnityEngine.TestRunner.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\ScriptAssemblies\\UnityEngine.UI.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver1\\Packages\\com.github.homuler.mediapipe\\Runtime\\Plugins\\Protobuf\\Google.Protobuf.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver1\\Packages\\com.github.homuler.mediapipe\\Runtime\\Plugins\\Protobuf\\System.Runtime.CompilerServices.Unsafe.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\PackageCache\\com.unity.ext.nunit@1.0.6\\net35\\unity-custom\\nunit.framework.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\PackageCache\\com.unity.testtools.codecoverage@1.2.6\\lib\\ReportGenerator\\ReportGeneratorMerged.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\PackageCache\\com.unity.visualscripting@1.9.4\\Runtime\\VisualScripting.Flow\\Dependencies\\NCalc\\Unity.VisualScripting.Antlr3.Runtime.dll\" -s=\"C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.56f1\\Editor\\Data\\Managed\\UnityEngine\" -s=\"C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.56f1\\Editor\\Data\\NetStandard\\compat\\2.1.0\\shims\\netfx\" -s=\"C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.56f1\\Editor\\Data\\NetStandard\\compat\\2.1.0\\shims\\netstandard\" -s=\"C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.56f1\\Editor\\Data\\NetStandard\\Extensions\\2.0.0\" -s=\"C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.56f1\\Editor\\Data\\NetStandard\\ref\\2.1.0\" -s=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\ScriptAssemblies\" -s=\"C:\\Users\\munek\\2025SUI_ver1\\Packages\\com.github.homuler.mediapipe\\Runtime\\Plugins\\Protobuf\" -s=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\PackageCache\\com.unity.ext.nunit@1.0.6\\net35\\unity-custom\" -s=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\PackageCache\\com.unity.testtools.codecoverage@1.2.6\\lib\\ReportGenerator\" -s=\"C:\\Users\\munek\\2025SUI_ver1\\Library\\PackageCache\\com.unity.visualscripting@1.9.4\\Runtime\\VisualScripting.Flow\\Dependencies\\NCalc\" -o=\"Library/BuildPlayerData/Editor\" -rn=\"\" -tn=\"TypeDb-All.json\"",
+      "Action": "\"C:/Program Files/Unity/Hub/Editor/2022.3.56f1/Editor/Data\\Tools\\netcorerun\\netcorerun.exe\" \"C:/Program Files/Unity/Hub/Editor/2022.3.56f1/Editor/Data/Tools/BuildPlayerDataGenerator/BuildPlayerDataGenerator.exe\" -a=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\ScriptAssemblies\\Assembly-CSharp.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\ScriptAssemblies\\Mediapipe.Runtime.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\ScriptAssemblies\\Mediapipe.Unity.Sample.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\ScriptAssemblies\\Unity.TextMeshPro.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\ScriptAssemblies\\Unity.Timeline.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\ScriptAssemblies\\Unity.VisualScripting.Core.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\ScriptAssemblies\\Unity.VisualScripting.Flow.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\ScriptAssemblies\\Unity.VisualScripting.State.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\ScriptAssemblies\\UnityEngine.TestRunner.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\ScriptAssemblies\\UnityEngine.UI.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver2\\Packages\\com.github.homuler.mediapipe\\Runtime\\Plugins\\Protobuf\\Google.Protobuf.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver2\\Packages\\com.github.homuler.mediapipe\\Runtime\\Plugins\\Protobuf\\System.Runtime.CompilerServices.Unsafe.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\PackageCache\\com.unity.ext.nunit@1.0.6\\net35\\unity-custom\\nunit.framework.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\PackageCache\\com.unity.testtools.codecoverage@1.2.6\\lib\\ReportGenerator\\ReportGeneratorMerged.dll\" -a=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\PackageCache\\com.unity.visualscripting@1.9.4\\Runtime\\VisualScripting.Flow\\Dependencies\\NCalc\\Unity.VisualScripting.Antlr3.Runtime.dll\" -s=\"C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.56f1\\Editor\\Data\\Managed\\UnityEngine\" -s=\"C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.56f1\\Editor\\Data\\NetStandard\\compat\\2.1.0\\shims\\netfx\" -s=\"C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.56f1\\Editor\\Data\\NetStandard\\compat\\2.1.0\\shims\\netstandard\" -s=\"C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.56f1\\Editor\\Data\\NetStandard\\Extensions\\2.0.0\" -s=\"C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.56f1\\Editor\\Data\\NetStandard\\ref\\2.1.0\" -s=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\ScriptAssemblies\" -s=\"C:\\Users\\munek\\2025SUI_ver2\\Packages\\com.github.homuler.mediapipe\\Runtime\\Plugins\\Protobuf\" -s=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\PackageCache\\com.unity.ext.nunit@1.0.6\\net35\\unity-custom\" -s=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\PackageCache\\com.unity.testtools.codecoverage@1.2.6\\lib\\ReportGenerator\" -s=\"C:\\Users\\munek\\2025SUI_ver2\\Library\\PackageCache\\com.unity.visualscripting@1.9.4\\Runtime\\VisualScripting.Flow\\Dependencies\\NCalc\" -o=\"Library/BuildPlayerData/Editor\" -rn=\"\" -tn=\"TypeDb-All.json\"",
       "Inputs": [
         "C:/Program Files/Unity/Hub/Editor/2022.3.56f1/Editor/Data/Tools/netcorerun/netcorerun.exe",
         "C:/Program Files/Unity/Hub/Editor/2022.3.56f1/Editor/Data/Tools/BuildPlayerDataGenerator/BuildPlayerDataGenerator.exe",
@@ -24054,6 +24055,6 @@
   "SharedResources": [],
   "Scanners": [],
   "Identifier": "Library/Bee/1900b0aE.dag.json",
-  "PayloadsFile": "C:/Users/munek/2025SUI_ver1/Library/Bee/1900b0aE.dag.payloads",
+  "PayloadsFile": "C:/Users/munek/2025SUI_ver2/Library/Bee/1900b0aE.dag.payloads",
   "RelativePathToRoot": "../.."
 }

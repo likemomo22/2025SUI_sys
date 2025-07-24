@@ -102,7 +102,7 @@ namespace PluxController
             try
             {
                 _csvLogger.Init();
-                _pluxManager.StartAcquisitionUnity(100, new List<int> { 1, 2 }, 16); // 根据需要设置通道编号
+                _pluxManager.StartAcquisitionUnity(100, new List<int> { 1, 2, 3 }, 16); // 根据需要设置通道编号
             }
             catch (System.Exception ex)
             {

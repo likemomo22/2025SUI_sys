@@ -378,12 +378,13 @@
 "Assets/Scripts/PluxDeviceManager/utils/Thread.cs"
 "Assets/Scripts/PluxDeviceManager/utils/UnityThreadHelper.cs"
 "Assets/Scripts/PluxDeviceManager/utils/WaitOneExtension.cs"
+"Assets/Scripts/SetIdType/SetIdType.cs"
+"Assets/Scripts/SetMaxValue/SetMaxValue.cs"
 "Assets/utils/ChannelProcessor.cs"
 "Assets/utils/CsvLogger.cs"
 "Assets/utils/GlobalText.cs"
 "Assets/utils/MathUtils.cs"
 "Assets/utils/PluxDataProcessor.cs"
-"Assets/utils/ReadTextUtil.cs"
 "Assets/utils/testGlobal.cs"
 -langversion:9.0
 /deterministic

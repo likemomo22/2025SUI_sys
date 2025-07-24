@@ -11,7 +11,7 @@ namespace Utils
 
         public event Action<int, float> OnSmoothedValueChanged; // int: channel index
 
-        public PluxDataProcessor(int channelCount, int windowSize = 10, float alpha = 0.2f)
+        public PluxDataProcessor(int channelCount, int windowSize = 10, float alpha = 0.15f)
         {
             for (int i = 0; i < channelCount; i++)
             {
@@ -35,12 +35,10 @@ namespace Utils
                 {
                     int fixedValue = rawData[i] - 32768;
 
-                    // ✅ type==2 且不是channel 1时（即i != 0），放大 1.25 倍
+                    //  type==2 且不是channel 1时（即i != 0），放大 1.25 倍
                     if (GlobalText.ExamType == "2" && i != 0)
                     {
-                        Debug.Log("raw: "+fixedValue);
-                        fixedValue = Mathf.RoundToInt(fixedValue * 10.0f);
-                        Debug.Log("after: "+fixedValue);
+                        fixedValue = Mathf.RoundToInt(fixedValue * 2.0f);
                     }
 
                     channelProcessors[i].AddValue(fixedValue);

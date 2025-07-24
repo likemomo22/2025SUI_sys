@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using utils;
 using Utils;
 
 namespace MuscleCircleController
@@ -18,6 +19,18 @@ namespace MuscleCircleController
         {
             if (fillImage != null)
                 recentColor = fillImage.color;
+            if (gameObject.name == "TargetMuscleCircle")
+            {
+                maxValue = GlobalText.Channel1;
+            }
+            if (gameObject.name == "SubMuscleCircle1")
+            {
+                maxValue = GlobalText.Channel2;
+            }
+            if (gameObject.name == "SubMuscleCircle2")
+            {
+                maxValue = GlobalText.Channel3;
+            }
         }
 
         public void SetValue(float rawValue)
@@ -30,9 +43,18 @@ namespace MuscleCircleController
             fillImage.fillAmount = normalized;
 
             // 设置目标颜色
-            targetColor = normalized >= 0.4f
-                ? Color.red
-                : new Color(160f / 255f, 232f / 255f, 180f / 255f);
+            if (gameObject.name == "SubMuscleCircle1" || gameObject.name == "SubMuscleCircle2")
+            {
+                targetColor = normalized >= 0.4f
+                    ? Color.red
+                    : new Color(160f / 255f, 232f / 255f, 180f / 255f);
+            }
+            else
+            {
+                targetColor = normalized >= 0.4f
+                    ? Color.red
+                    : new Color(160f / 255f, 232f / 255f, 180f / 255f);
+            }
         }
 
         private void Update()

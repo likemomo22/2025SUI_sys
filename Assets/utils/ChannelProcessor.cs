@@ -12,7 +12,7 @@ namespace utils
 
         public event Action<float> OnValueSmoothed;
 
-        public ChannelProcessor(int windowSize = 10, float alpha = 0.2f)
+        public ChannelProcessor(int windowSize = 20, float alpha = 0.1f)
         {
             this.windowSize = windowSize;
             this.alpha = alpha;
@@ -29,9 +29,14 @@ namespace utils
                 avg += val;
             avg /= window.Count;
 
-            smoothedValue = alpha * avg + (1 - alpha) * smoothedValue;
+            // 动态调整 alpha：上升快，下降慢
+            float dynamicAlpha = avg > smoothedValue ? alpha * 1.5f : alpha * 0.2f;
+            dynamicAlpha = Math.Clamp(dynamicAlpha, 0.01f, 1.0f);  // 避免超出范围
+
+            smoothedValue = dynamicAlpha * avg + (1 - dynamicAlpha) * smoothedValue;
             OnValueSmoothed?.Invoke(smoothedValue);
         }
+
 
         public void Reset()
         {

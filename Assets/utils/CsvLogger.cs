@@ -14,7 +14,7 @@ namespace utils
             string fileName = $"UserId_{GlobalText.UserId}___Type_{GlobalText.ExamType}.csv";
             filePath = Path.Combine(Application.persistentDataPath, fileName);
             buffer.Clear();
-            buffer.Add("Frame,Channel1,Channel2"); // 可扩展为多通道
+            buffer.Add("Frame,Channel1,Channel2,Channel3"); // 可扩展为多通道
         }
 
         public void Write(int frame, int[] rawData)
