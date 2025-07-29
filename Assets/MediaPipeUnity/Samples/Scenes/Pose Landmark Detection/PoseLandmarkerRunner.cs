@@ -19,6 +19,9 @@ namespace Mediapipe.Unity.Sample.PoseLandmarkDetection
 
     public readonly PoseLandmarkDetectionConfig config = new PoseLandmarkDetectionConfig();
 
+    
+    public PoseLandmarkerResult CurrentResult { get; private set; }
+
     public override void Stop()
     {
       base.Stop();
@@ -161,6 +164,8 @@ namespace Mediapipe.Unity.Sample.PoseLandmarkDetection
 
     private void OnPoseLandmarkDetectionOutput(PoseLandmarkerResult result, Image image, long timestamp)
     {
+      CurrentResult = result;
+
       _poseLandmarkerResultAnnotationController.DrawLater(result);
       DisposeAllMasks(result);
     }
@@ -175,5 +180,7 @@ namespace Mediapipe.Unity.Sample.PoseLandmarkDetection
         }
       }
     }
+    
   }
+  
 }

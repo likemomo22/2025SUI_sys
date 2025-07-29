@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using utils;
 using Utils;
+using ArmGuideLine;
 
 namespace PluxController
 {
@@ -20,11 +21,18 @@ namespace PluxController
         public Button stopButton;
         public Button disconnectButton;
 
+        public int SamplingRate=1000;
+
         private CsvLogger _csvLogger = new CsvLogger();
 
         // ✅ 多通道数据处理器（初始化时设置通道数）
         private PluxDataProcessor _dataProcessor;
+        
+        public LineAreaCollisionChecker checker;
+        public PoseLandmarkTracker tracker;
+        public RectTransform targetCanvas; // 用于canvas坐标转换
 
+        public LineOnCircleMover mover;
         // ✅ 多个 UI 圆圈控制器（在 Inspector 中设置）
         public MuscleCircleController.MuscleCircleController[] muscleCircleControllers;
 
@@ -102,7 +110,7 @@ namespace PluxController
             try
             {
                 _csvLogger.Init();
-                _pluxManager.StartAcquisitionUnity(100, new List<int> { 1, 2, 3 }, 16); // 根据需要设置通道编号
+                _pluxManager.StartAcquisitionUnity(SamplingRate, new List<int> { 1, 2, 3 }, 16); // 根据需要设置通道编号
             }
             catch (System.Exception ex)
             {
@@ -170,8 +178,27 @@ namespace PluxController
 
         void OnDataReceived(int nSeq, int[] data)
         {
-            _csvLogger.Write(nSeq, data);
+            // ========== 判定区域 ==========
+            Vector2 wristCanvasPos = GetWristLandmarkCanvasPosition();
+            BandCollisionState state = checker != null
+                ? checker.JudgeBandPosition(wristCanvasPos)
+                : BandCollisionState.Inside; // 没连checker时默认Inside
+
+            int movePhase = (int)mover.GetCurrentMovePhase(); // 0=Moving, 1=Waiting
+
+            // ========== 写入 ==========
+            _csvLogger.Write(nSeq, data, (int)state, movePhase);
             _dataProcessor.Process(data);
+        }
+        // 关键：当前帧手腕canvas位置（和判定时写入同步！）
+        Vector2 GetWristLandmarkCanvasPosition()
+        {
+            if (tracker == null || targetCanvas == null)
+                return Vector2.zero;
+            Vector2 wristCanvasPos;
+            int wristLandmarkIndex = 15; // 右手腕，左手可用16
+            bool success = tracker.TryGetCanvasLandmarkPosition(wristLandmarkIndex, targetCanvas, out wristCanvasPos);
+            return success ? wristCanvasPos : Vector2.zero;
         }
 
         void OnEventDetected(PluxDeviceManager.PluxEvent e)

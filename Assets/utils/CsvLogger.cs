@@ -9,17 +9,19 @@ namespace utils
         private List<string> buffer = new List<string>();
         private string filePath = "";
 
+        // 新增：支持判定
         public void Init()
         {
             string fileName = $"UserId_{GlobalText.UserId}___Type_{GlobalText.ExamType}.csv";
-            filePath = Path.Combine(Application.persistentDataPath, fileName);
+            filePath = Path.Combine(@"C:\Users\munek\2025SUI_ver2_data", fileName);
             buffer.Clear();
-            buffer.Add("Frame,Channel1,Channel2,Channel3"); // 可扩展为多通道
+            buffer.Add("Frame,Channel1,Channel2,Channel3,JudgeState"); // 多一列状态
         }
 
-        public void Write(int frame, int[] rawData)
+        // 新增参数 judgeState
+        public void Write(int frame, int[] rawData, int judgeState, int movePhase)
         {
-            string line = $"{frame},{string.Join(",", rawData)}";
+            string line = $"{frame},{string.Join(",", rawData)},{judgeState},{movePhase}";
             buffer.Add(line);
             try
             {

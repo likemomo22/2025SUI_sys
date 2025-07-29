@@ -21,25 +21,25 @@ namespace Mediapipe.Unity
     [SerializeField] private Color _color = Color.green;
     [SerializeField] private float _radius = 15.0f;
     
-    public GameObject targetMuscleCube ;
-    public GameObject subMuscleCube1 ;
-    public GameObject subMuscleCube2 ;
+    // public GameObject targetMuscleCube ;
+    // public GameObject subMuscleCube1 ;
+    // public GameObject subMuscleCube2 ;
     
     void Awake()
     {
-      if (targetMuscleCube == null)
-      {
-        targetMuscleCube = GameObject.Find("TargetMuscleCircle");
-        Debug.Log("GET");
-      }
-      if (subMuscleCube1 == null)
-      {
-        subMuscleCube1 = GameObject.Find("SubMuscleCircle1");
-      }
-      if (subMuscleCube2 == null)
-      {
-        subMuscleCube2 = GameObject.Find("SubMuscleCircle2");
-      }
+      // if (targetMuscleCube == null)
+      // {
+      //   targetMuscleCube = GameObject.Find("TargetMuscleCircle");
+      //   Debug.Log("GET");
+      // }
+      // if (subMuscleCube1 == null)
+      // {
+      //   subMuscleCube1 = GameObject.Find("SubMuscleCircle1");
+      // }
+      // if (subMuscleCube2 == null)
+      // {
+      //   subMuscleCube2 = GameObject.Find("SubMuscleCircle2");
+      // }
     }
     
 #if UNITY_EDITOR
@@ -119,25 +119,25 @@ namespace Mediapipe.Unity
             annotation.Draw(in target, visualizeZ);
 
             // 确保 landmarks 数足够
-            if (children.Count > 15)
-            {
-              // 点11（右肩）
-              targetMuscleCube.transform.position = children[11].transform.position;
-
-              // 点9 和 点11 的中点
-              var p9 = children[9].transform.position;
-              var p11 = children[11].transform.position;
-              subMuscleCube1.transform.position = (p9 + p11) / 2f;
-
-              // 点13 和 点15 的中点（右臂中部）
-              var p13 = children[13].transform.position;
-              var p15 = children[15].transform.position;
-              subMuscleCube2.transform.position = (p13 + p15) / 2f;
-            }
-            else
-            {
-              Debug.LogWarning($"Landmark 数量不足，当前 count = {children.Count}");
-            }
+            // if (children.Count > 15)
+            // {
+            //   // 点11（右肩）
+            //   targetMuscleCube.transform.position = children[11].transform.position;
+            //
+            //   // 点9 和 点11 的中点
+            //   var p9 = children[9].transform.position;
+            //   var p11 = children[11].transform.position;
+            //   subMuscleCube1.transform.position = (p9 + p11) / 2f;
+            //
+            //   // 点13 和 点15 的中点（右臂中部）
+            //   var p13 = children[13].transform.position;
+            //   var p15 = children[15].transform.position;
+            //   subMuscleCube2.transform.position = (p13 + p15) / 2f;
+            // }
+            // else
+            // {
+            //   Debug.LogWarning($"Landmark 数量不足，当前 count = {children.Count}");
+            // }
           }
         });
       }

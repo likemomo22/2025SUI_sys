@@ -359,6 +359,11 @@
 "Assets/MediaPipeUnity/Tutorial/Custom Graph/FaceMeshLegacy.cs"
 "Assets/MediaPipeUnity/Tutorial/Hello World/HelloWorld.cs"
 "Assets/MediaPipeUnity/Tutorial/Tasks/FaceLandmarkerRunner.cs"
+"Assets/Scripts/ArmGuideLine/ArmGuideLinePoint.cs"
+"Assets/Scripts/ArmGuideLine/BandCollisionState.cs"
+"Assets/Scripts/ArmGuideLine/CircleCenterCalculator.cs"
+"Assets/Scripts/ArmGuideLine/LineAreaCollisionChecker.cs"
+"Assets/Scripts/ArmGuideLine/LineOnCircleMover.cs"
 "Assets/Scripts/CanvasSwitcher/CanvasSwitcher.cs"
 "Assets/Scripts/MirrorCanvasScript/CameraDisplay.cs"
 "Assets/Scripts/MuscleCircleController/MuscleCircleController.cs"
@@ -385,6 +390,7 @@
 "Assets/utils/GlobalText.cs"
 "Assets/utils/MathUtils.cs"
 "Assets/utils/PluxDataProcessor.cs"
+"Assets/utils/PoseLandmarkTracker.cs"
 "Assets/utils/testGlobal.cs"
 -langversion:9.0
 /deterministic
