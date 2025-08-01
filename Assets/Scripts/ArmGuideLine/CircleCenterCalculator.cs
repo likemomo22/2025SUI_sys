@@ -68,6 +68,10 @@ namespace ArmGuideLine
 
                 // === 新增：保存到GlobalText ===
                 GlobalText.CircleCenter = center;
+                
+                // === 新增：计算半径并保存 ===
+                GlobalText.CircleRadius = (GlobalText.CircleBottom - center).magnitude;
+                Debug.Log($"圆弧半径: {GlobalText.CircleRadius:F2}");
             }
             else
             {

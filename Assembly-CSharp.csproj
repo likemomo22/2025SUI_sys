@@ -52,6 +52,7 @@
     <Compile Include="Assets\utils\GlobalText.cs" />
     <Compile Include="Assets\MediaPipeUnity\Tutorial\Tasks\FaceLandmarkerRunner.cs" />
     <Compile Include="Assets\Scripts\MirrorCanvasScript\CameraDisplay.cs" />
+    <Compile Include="Assets\Scripts\ArmGuideLine\ArcBandMathChecker.cs" />
     <Compile Include="Assets\Scripts\PluxDeviceManager\utils\TaskExtension.cs" />
     <Compile Include="Assets\Scripts\PluxDeviceManager\utils\UnityThreadHelper.cs" />
     <Compile Include="Assets\Scripts\ArmGuideLine\BandCollisionState.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Assets\Scripts\SetMaxValue\SetMaxValue.cs" />
     <Compile Include="Assets\Scripts\PluxDeviceManager\utils\EnumerableExtension.cs" />
     <Compile Include="Assets\Scripts\PluxDeviceManager\utils\Dispatcher.cs" />
+    <Compile Include="Assets\utils\UIDotUtils.cs" />
     <Compile Include="Assets\Scripts\CanvasSwitcher\CanvasSwitcher.cs" />
     <Compile Include="Assets\Scripts\SetIdType\SetIdType.cs" />
     <Compile Include="Assets\MediaPipeUnity\Tutorial\Hello World\HelloWorld.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="Assets\utils\ChannelProcessor.cs" />
     <Compile Include="Assets\utils\MathUtils.cs" />
     <Compile Include="Assets\Scripts\PluxDeviceManager\utils\EnumeratorExtension.cs" />
+    <Compile Include="Assets\Scripts\ArmGuideLine\UICurveDrawer.cs" />
     <None Include="Packages\com.github.homuler.mediapipe\PackageResources\Shaders\OverlayMask.shader" />
     <None Include="Packages\com.github.homuler.mediapipe\package.json" />
     <None Include="Assets\StreamingAssets\ssdlite_object_detection_labelmap.txt" />

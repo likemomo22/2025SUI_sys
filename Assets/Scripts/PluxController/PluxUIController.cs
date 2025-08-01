@@ -6,6 +6,7 @@ using utils;
 using Utils;
 using ArmGuideLine;
 
+
 namespace PluxController
 {
     public class PluxUIController : MonoBehaviour
@@ -179,7 +180,33 @@ namespace PluxController
         void OnDataReceived(int nSeq, int[] data)
         {
             // ========== 判定区域 ==========
+
             Vector2 wristCanvasPos = GetWristLandmarkCanvasPosition();
+
+            // 你用的全局参数
+            Vector2 arcCenter = GlobalText.CircleCenter;
+            Vector2 arcStart  = GlobalText.CircleBottom;
+            Vector2 arcEnd    = GlobalText.CircleMid;
+            float arcBaseRadius = GlobalText.CircleRadius;
+            float innerR = arcBaseRadius + mover.arcInnerOffset;
+            float outerR = arcBaseRadius + mover.arcOuterOffset;
+            float angleStart = Mathf.Atan2(arcStart.y - arcCenter.y, arcStart.x - arcCenter.x);
+            float angleEnd   = Mathf.Atan2(arcEnd.y   - arcCenter.y, arcEnd.x   - arcCenter.x);
+
+            // 判定
+            var arcZone = ArmGuideLine.ArcBandMathChecker.GetArcZone(
+                wristCanvasPos, arcCenter, innerR, outerR, angleStart, angleEnd
+            );
+
+            int arcStateForCsv = 0;
+            switch (arcZone)
+            {
+                
+                case ArmGuideLine.ArcBandMathChecker.ArcZone.Inner: arcStateForCsv = -1; break;
+                case ArmGuideLine.ArcBandMathChecker.ArcZone.Outer: arcStateForCsv =  1; break;
+                case ArmGuideLine.ArcBandMathChecker.ArcZone.Between: arcStateForCsv = 0; break;
+            }
+
             BandCollisionState state = checker != null
                 ? checker.JudgeBandPosition(wristCanvasPos)
                 : BandCollisionState.Inside; // 没连checker时默认Inside
@@ -187,9 +214,12 @@ namespace PluxController
             int movePhase = (int)mover.GetCurrentMovePhase(); // 0=Moving, 1=Waiting
 
             // ========== 写入 ==========
-            _csvLogger.Write(nSeq, data, (int)state, movePhase);
+            // 这里 arcStateForCsv 就是你要的新状态
+            _csvLogger.Write(nSeq, data, arcStateForCsv, (int)state, movePhase);
+
             _dataProcessor.Process(data);
         }
+
         // 关键：当前帧手腕canvas位置（和判定时写入同步！）
         Vector2 GetWristLandmarkCanvasPosition()
         {

@@ -13,15 +13,15 @@ namespace utils
         public void Init()
         {
             string fileName = $"UserId_{GlobalText.UserId}___Type_{GlobalText.ExamType}.csv";
-            filePath = Path.Combine(@"C:\Users\munek\2025SUI_ver2_data", fileName);
+            filePath = Path.Combine(@"C:\Users\munek\2025SUI_ver3_data", fileName);
             buffer.Clear();
-            buffer.Add("Frame,Channel1,Channel2,Channel3,JudgeState"); // 多一列状态
+            buffer.Add("Frame,Channel1,Channel2,Channel3,arcStateForCsv,JudgeState,movePhase"); // 多一列状态
         }
 
         // 新增参数 judgeState
-        public void Write(int frame, int[] rawData, int judgeState, int movePhase)
+        public void Write(int frame, int[] rawData,int arcStateForCsv, int judgeState, int movePhase)
         {
-            string line = $"{frame},{string.Join(",", rawData)},{judgeState},{movePhase}";
+            string line = $"{frame},{string.Join(",", rawData)},{arcStateForCsv},{judgeState},{movePhase}";
             buffer.Add(line);
             try
             {

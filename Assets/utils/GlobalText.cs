@@ -16,5 +16,6 @@ namespace utils
         public static Vector2 CircleBottom;
 
         public static Vector2 CircleCenter;
+        public static float CircleRadius;
     }
 }
