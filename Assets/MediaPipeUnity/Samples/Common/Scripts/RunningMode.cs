@@ -4,20 +4,22 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+using System;
+
 namespace Mediapipe.Unity
 {
-  [System.Serializable]
-  public enum RunningMode
-  {
-    Async,
-    Sync,
-  }
-
-  public static class RunningModeExtension
-  {
-    public static bool IsSynchronous(this RunningMode runningMode)
+    [Serializable]
+    public enum RunningMode
     {
-      return runningMode == RunningMode.Sync;
+        Async,
+        Sync
     }
-  }
+
+    public static class RunningModeExtension
+    {
+        public static bool IsSynchronous(this RunningMode runningMode)
+        {
+            return runningMode == RunningMode.Sync;
+        }
+    }
 }

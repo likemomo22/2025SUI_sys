@@ -4,12 +4,20 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+using Google.Protobuf.WellKnownTypes;
+
 namespace Mediapipe.Tasks.Core
 {
-  internal interface ITaskOptions
-  {
-    CalculatorOptions ToCalculatorOptions() => null;
+    internal interface ITaskOptions
+    {
+        CalculatorOptions ToCalculatorOptions()
+        {
+            return null;
+        }
 
-    Google.Protobuf.WellKnownTypes.Any ToAnyOptions() => null;
-  }
+        Any ToAnyOptions()
+        {
+            return null;
+        }
+    }
 }

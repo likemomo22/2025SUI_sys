@@ -1,163 +1,161 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace UnityThreading
 {
-	public class Channel<T> : IDisposable
-	{
-		private List<T> buffer = new List<T>();
-		private object setSyncRoot = new object();
-		private object getSyncRoot = new object();
-		private object disposeRoot = new object();
-		private ManualResetEvent setEvent = new ManualResetEvent(false);
-		private ManualResetEvent getEvent = new ManualResetEvent(true);
-		private ManualResetEvent exitEvent = new ManualResetEvent(false);
-		private bool disposed = false;
+    public class Channel<T> : IDisposable
+    {
+        private readonly List<T> buffer = new();
+        private readonly object disposeRoot = new();
+        private readonly object getSyncRoot = new();
+        private readonly object setSyncRoot = new();
+        private bool disposed;
+        private ManualResetEvent exitEvent = new(false);
+        private ManualResetEvent getEvent = new(true);
+        private ManualResetEvent setEvent = new(false);
 
-		public int BufferSize { get; private set; }
+        public Channel()
+            : this(1)
+        {
+        }
 
-		public Channel()
-			: this(1)
-		{
-		}
+        public Channel(int bufferSize)
+        {
+            if (bufferSize < 1)
+                throw new ArgumentOutOfRangeException("bufferSize", "Must be greater or equal to 1.");
 
-		public Channel(int bufferSize)
-		{
-			if (bufferSize < 1)
-				throw new ArgumentOutOfRangeException("bufferSize", "Must be greater or equal to 1.");
+            BufferSize = bufferSize;
+        }
 
-			this.BufferSize = bufferSize;
-		}
+        public int BufferSize { get; private set; }
 
-		~Channel()
-		{
-			Dispose();
-		}
+        #region IDisposable Members
 
-		public void Resize(int newBufferSize)
-		{
-			if (newBufferSize < 1)
-				throw new ArgumentOutOfRangeException("newBufferSize", "Must be greater or equal to 1.");
+        public void Dispose()
+        {
+            if (disposed)
+                return;
 
-			lock (setSyncRoot)
-			{
-				if (disposed)
-					return;
+            lock (disposeRoot)
+            {
+                exitEvent.Set();
 
-				var result = WaitHandle.WaitAny(new WaitHandle[] { exitEvent, getEvent });
-				if (result == 0)
-					return;
+                lock (getSyncRoot)
+                {
+                    lock (setSyncRoot)
+                    {
+                        setEvent.Close();
+                        setEvent = null;
 
-				buffer.Clear();
+                        getEvent.Close();
+                        getEvent = null;
 
-				if (newBufferSize != BufferSize)
-					BufferSize = newBufferSize;
-			}
-		}
+                        exitEvent.Close();
+                        exitEvent = null;
 
-		public bool Set(T value)
-		{
-			return Set(value, int.MaxValue);
-		}
+                        disposed = true;
+                    }
+                }
+            }
+        }
 
-		public bool Set(T value, int timeoutInMilliseconds)
-		{
-			lock (setSyncRoot)
-			{
-				if (disposed)
-					return false;
-			
-				var result = WaitHandle.WaitAny(new WaitHandle[] { exitEvent, getEvent }, timeoutInMilliseconds);
-				if (result == WaitHandle.WaitTimeout || result == 0)
-					return false;
+        #endregion
 
-				buffer.Add(value);
-				if (buffer.Count == BufferSize)
-				{
-					setEvent.Set();
-					getEvent.Reset();
-				}
+        ~Channel()
+        {
+            Dispose();
+        }
 
-				return true;
-			}
-		}
+        public void Resize(int newBufferSize)
+        {
+            if (newBufferSize < 1)
+                throw new ArgumentOutOfRangeException("newBufferSize", "Must be greater or equal to 1.");
 
-		public T Get()
-		{
-			return Get(int.MaxValue, default(T));
-		}
+            lock (setSyncRoot)
+            {
+                if (disposed)
+                    return;
 
-		public T Get(int timeoutInMilliseconds, T defaultValue)
-		{
-			lock (getSyncRoot)
-			{
-				if (disposed)
-					return defaultValue;
+                var result = WaitHandle.WaitAny(new WaitHandle[] { exitEvent, getEvent });
+                if (result == 0)
+                    return;
 
-				var result = WaitHandle.WaitAny(new WaitHandle[] { exitEvent, setEvent }, timeoutInMilliseconds);
-				if (result == WaitHandle.WaitTimeout || result == 0)
-					return defaultValue;
+                buffer.Clear();
 
-				var value = buffer[0];
-				buffer.RemoveAt(0);
-				if (buffer.Count == 0)
-				{
-					getEvent.Set();
-					setEvent.Reset();
-				}
+                if (newBufferSize != BufferSize)
+                    BufferSize = newBufferSize;
+            }
+        }
 
-				return value;
-			}
-		}
+        public bool Set(T value)
+        {
+            return Set(value, int.MaxValue);
+        }
 
-		public void Close()
-		{
-			lock (disposeRoot)
-			{
-				if (disposed)
-					return;
+        public bool Set(T value, int timeoutInMilliseconds)
+        {
+            lock (setSyncRoot)
+            {
+                if (disposed)
+                    return false;
 
-				exitEvent.Set();
-			}
-		}
+                var result = WaitHandle.WaitAny(new WaitHandle[] { exitEvent, getEvent }, timeoutInMilliseconds);
+                if (result == WaitHandle.WaitTimeout || result == 0)
+                    return false;
 
-		#region IDisposable Members
+                buffer.Add(value);
+                if (buffer.Count == BufferSize)
+                {
+                    setEvent.Set();
+                    getEvent.Reset();
+                }
 
-		public void Dispose()
-		{
-			if (disposed)
-				return;
+                return true;
+            }
+        }
 
-			lock (disposeRoot)
-			{
-				exitEvent.Set();
+        public T Get()
+        {
+            return Get(int.MaxValue, default);
+        }
 
-				lock (getSyncRoot)
-				{
-					lock (setSyncRoot)
-					{
-						setEvent.Close();
-						setEvent = null;
+        public T Get(int timeoutInMilliseconds, T defaultValue)
+        {
+            lock (getSyncRoot)
+            {
+                if (disposed)
+                    return defaultValue;
 
-						getEvent.Close();
-						getEvent = null;
+                var result = WaitHandle.WaitAny(new WaitHandle[] { exitEvent, setEvent }, timeoutInMilliseconds);
+                if (result == WaitHandle.WaitTimeout || result == 0)
+                    return defaultValue;
 
-						exitEvent.Close();
-						exitEvent = null;
+                var value = buffer[0];
+                buffer.RemoveAt(0);
+                if (buffer.Count == 0)
+                {
+                    getEvent.Set();
+                    setEvent.Reset();
+                }
 
-						disposed = true;
-					}
-				}
-			}
-		}
+                return value;
+            }
+        }
 
-		#endregion
-	}
+        public void Close()
+        {
+            lock (disposeRoot)
+            {
+                if (disposed)
+                    return;
 
-	public class Channel : Channel<object>
-	{
-	}
+                exitEvent.Set();
+            }
+        }
+    }
+
+    public class Channel : Channel<object>
+    {
+    }
 }

@@ -1,33 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace UnityThreading
+﻿namespace UnityThreading
 {
-	public class SwitchTo
-	{
-		public enum TargetType
-		{ 
-			Main,
-			Thread
-		}
-
-		public TargetType Target { get; private set; }
-
-		private SwitchTo(TargetType target)
-		{
-			Target = target;
-		}
+    public class SwitchTo
+    {
+        public enum TargetType
+        {
+            Main,
+            Thread
+        }
 
         /// <summary>
-        /// Changes the context of the following commands to the MainThread when yielded.
+        ///     Changes the context of the following commands to the MainThread when yielded.
         /// </summary>
-		public static readonly SwitchTo MainThread = new SwitchTo(TargetType.Main);
+        public static readonly SwitchTo MainThread = new(TargetType.Main);
 
         /// <summary>
-        /// Changes the context of the following commands to the WorkerThread when yielded.
+        ///     Changes the context of the following commands to the WorkerThread when yielded.
         /// </summary>
-		public static readonly SwitchTo Thread = new SwitchTo(TargetType.Thread);
-	}
+        public static readonly SwitchTo Thread = new(TargetType.Thread);
+
+        private SwitchTo(TargetType target)
+        {
+            Target = target;
+        }
+
+        public TargetType Target { get; private set; }
+    }
 }

@@ -7,7 +7,10 @@ Shader "Unlit/MediaPipe/Convergence Shader"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags
+        {
+            "RenderType"="Opaque"
+        }
         LOD 100
 
         Pass
@@ -37,7 +40,7 @@ Shader "Unlit/MediaPipe/Convergence Shader"
             float4 _Color;
             float4 _MainTex_ST;
 
-            v2f vert (appdata v)
+            v2f vert(appdata v)
             {
                 v2f o;
                 if (v.vertex.y > 0)
@@ -47,11 +50,11 @@ Shader "Unlit/MediaPipe/Convergence Shader"
                 }
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                UNITY_TRANSFER_FOG(o,o.vertex);
+                UNITY_TRANSFER_FOG(o, o.vertex);
                 return o;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
                 // sample the texture
                 fixed4 col = _Color;

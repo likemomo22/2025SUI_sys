@@ -11,7 +11,10 @@ Shader "Unlit/MediaPipe/Overlay Mask Shader"
 
     SubShader
     {
-        Tags { "Queue"="Transparent" "RenderType"="Transparent" }
+        Tags
+        {
+            "Queue"="Transparent" "RenderType"="Transparent"
+        }
         ZWrite Off
         Blend SrcAlpha OneMinusSrcAlpha
         LOD 100
@@ -42,12 +45,12 @@ Shader "Unlit/MediaPipe/Overlay Mask Shader"
             sampler2D _MainTex;
             float4 _MainTex_ST;
 
-            v2f vert (appdata v)
+            v2f vert(appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                UNITY_TRANSFER_FOG(o,o.vertex);
+                UNITY_TRANSFER_FOG(o, o.vertex);
                 return o;
             }
 
@@ -58,7 +61,7 @@ Shader "Unlit/MediaPipe/Overlay Mask Shader"
             float _Threshold;
             uniform StructuredBuffer<float> _MaskBuffer;
 
-            fixed4 frag (v2f i) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
                 // sample the texture
                 fixed4 emptyCol = (0.0, 0.0, 0.0, 0.0);

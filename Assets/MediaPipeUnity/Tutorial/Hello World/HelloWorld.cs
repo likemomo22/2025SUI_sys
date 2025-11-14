@@ -8,11 +8,11 @@ using UnityEngine;
 
 namespace Mediapipe.Unity.Tutorial
 {
-  public class HelloWorld : MonoBehaviour
-  {
-    private void Start()
+    public class HelloWorld : MonoBehaviour
     {
-      var configText = @"
+        private void Start()
+        {
+            var configText = @"
 input_stream: ""in""
 output_stream: ""out""
 node {
@@ -26,27 +26,24 @@ node {
   output_stream: ""out""
 }
 ";
-      var graph = new CalculatorGraph(configText);
-      using var poller = graph.AddOutputStreamPoller<string>("out");
-      graph.StartRun();
+            var graph = new CalculatorGraph(configText);
+            using var poller = graph.AddOutputStreamPoller<string>("out");
+            graph.StartRun();
 
-      for (var i = 0; i < 10; i++)
-      {
-        var input = Packet.CreateStringAt("Hello World!", i);
-        graph.AddPacketToInputStream("in", input);
-      }
+            for (var i = 0; i < 10; i++)
+            {
+                var input = Packet.CreateStringAt("Hello World!", i);
+                graph.AddPacketToInputStream("in", input);
+            }
 
-      graph.CloseInputStream("in");
+            graph.CloseInputStream("in");
 
-      using var output = new Packet<string>();
-      while (poller.Next(output))
-      {
-        Debug.Log(output.Get());
-      }
+            using var output = new Packet<string>();
+            while (poller.Next(output)) Debug.Log(output.Get());
 
-      graph.WaitUntilDone();
+            graph.WaitUntilDone();
 
-      Debug.Log("Done");
+            Debug.Log("Done");
+        }
     }
-  }
 }

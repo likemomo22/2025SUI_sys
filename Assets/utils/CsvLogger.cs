@@ -6,20 +6,22 @@ namespace utils
 {
     public class CsvLogger
     {
-        private List<string> buffer = new List<string>();
+        private readonly List<string> buffer = new();
         private string filePath = "";
 
+        // 新增：支持判定
         public void Init()
         {
-            string fileName = $"UserId_{GlobalText.UserId}___Type_{GlobalText.ExamType}.csv";
-            filePath = Path.Combine(Application.persistentDataPath, fileName);
+            var fileName = $"UserId_{GlobalText.userId}___Type_{GlobalText.examType}.csv";
+            filePath = Path.Combine(@"C:\Users\munek\2025SUI_ver4_data", fileName);
             buffer.Clear();
-            buffer.Add("Frame,Channel1,Channel2,Channel3"); // 可扩展为多通道
+            buffer.Add("Frame,Channel1,Channel2,Channel3,arcStateForCsv,JudgeState,movePhase"); // 多一列状态
         }
 
-        public void Write(int frame, int[] rawData)
+        // 新增参数 judgeState
+        public void Write(int frame, int[] rawData, int arcStateForCsv, int judgeState, int movePhase)
         {
-            string line = $"{frame},{string.Join(",", rawData)}";
+            var line = $"{frame},{string.Join(",", rawData)},{arcStateForCsv},{judgeState},{movePhase}";
             buffer.Add(line);
             try
             {
