@@ -4,12 +4,14 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+using System;
+
 namespace Mediapipe.Unity
 {
-  [System.Serializable]
-  public enum InferenceMode
-  {
-    GPU,
-    CPU,
-  }
+    [Serializable]
+    public enum InferenceMode
+    {
+        GPU,
+        CPU
+    }
 }

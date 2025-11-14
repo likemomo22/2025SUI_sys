@@ -367,6 +367,7 @@
 "Assets/Scripts/ArmGuideLine/LineOnCircleMover.cs"
 "Assets/Scripts/ArmGuideLine/UICurveDrawer.cs"
 "Assets/Scripts/CanvasSwitcher/CanvasSwitcher.cs"
+"Assets/Scripts/MainCanvasver2/UIControl/CircleVisible/SetCircleVisible.cs"
 "Assets/Scripts/MirrorCanvasScript/CameraDisplay.cs"
 "Assets/Scripts/MuscleCircleController/MuscleCircleController.cs"
 "Assets/Scripts/MuscleCircleManager/MuscleCircleManager.cs"

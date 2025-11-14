@@ -6,14 +6,14 @@ namespace ArmGuideLine
 {
     public class CircleCenterCalculator : MonoBehaviour
     {
-        public Button calcButton;              // 拖UI Button进来
-        public InputField outputInput;         // 拖InputField进来
-        public Canvas targetCanvas;            // 拖Canvas进来
-        public float dotRadius = 20f;          // 圆心点半径
+        public Button calcButton; // 拖UI Button进来
+        public InputField outputInput; // 拖InputField进来
+        public Canvas targetCanvas; // 拖Canvas进来
+        public float dotRadius = 20f; // 圆心点半径
 
-        private Image _centerDot;               // 圆心点
+        private Image _centerDot; // 圆心点
 
-        void Start()
+        private void Start()
         {
             if (calcButton != null)
                 calcButton.onClick.AddListener(OnCalcButtonClicked);
@@ -30,13 +30,13 @@ namespace ArmGuideLine
 
         private Image CreateRedDot(string name)
         {
-            GameObject go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            var go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
             go.transform.SetParent(targetCanvas.transform, false);
 
             var img = go.GetComponent<Image>();
             img.color = Color.red;
             img.raycastTarget = false;
-            img.sprite = UnityEngine.Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
+            img.sprite = Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
             img.type = Image.Type.Simple;
             img.preserveAspect = true;
 
@@ -46,14 +46,14 @@ namespace ArmGuideLine
         }
 
         // 按钮点击，计算圆心并写入InputField
-        void OnCalcButtonClicked()
+        private void OnCalcButtonClicked()
         {
-            Vector2 A = GlobalText.CircleTop;
-            Vector2 B = GlobalText.CircleMid;
-            Vector2 C = GlobalText.CircleBottom;
+            var A = GlobalText.circleTop;
+            var B = GlobalText.circleMid;
+            var C = GlobalText.circleBottom;
 
             Vector2 center;
-            bool success = CalcCircleCenter(A, B, C, out center);
+            var success = CalcCircleCenter(A, B, C, out center);
             if (success)
             {
                 Debug.Log($"圆心为: {center}");
@@ -67,11 +67,11 @@ namespace ArmGuideLine
                 }
 
                 // === 新增：保存到GlobalText ===
-                GlobalText.CircleCenter = center;
-                
+                GlobalText.circleCenter = center;
+
                 // === 新增：计算半径并保存 ===
-                GlobalText.CircleRadius = (GlobalText.CircleBottom - center).magnitude;
-                Debug.Log($"圆弧半径: {GlobalText.CircleRadius:F2}");
+                GlobalText.circleRadius = (GlobalText.circleBottom - center).magnitude;
+                Debug.Log($"圆弧半径: {GlobalText.circleRadius:F2}");
             }
             else
             {
@@ -84,21 +84,22 @@ namespace ArmGuideLine
         }
 
         // 用户手动编辑InputField时
-        void OnInputChanged(string input)
+        private void OnInputChanged(string input)
         {
-            string[] parts = input.Split(',');
-            if (parts.Length == 2 && float.TryParse(parts[0], out float x) && float.TryParse(parts[1], out float y))
+            var parts = input.Split(',');
+            if (parts.Length == 2 && float.TryParse(parts[0], out var x) && float.TryParse(parts[1], out var y))
             {
-                Vector2 center = new Vector2(x, y);
+                var center = new Vector2(x, y);
                 if (_centerDot != null)
                 {
                     _centerDot.rectTransform.anchoredPosition = center;
                     _centerDot.gameObject.SetActive(true);
                 }
+
                 Debug.Log($"通过输入手动设置圆心为: {center}");
 
                 // === 新增：保存到GlobalText ===
-                GlobalText.CircleCenter = center;
+                GlobalText.circleCenter = center;
             }
         }
 
@@ -109,15 +110,15 @@ namespace ArmGuideLine
             float x2 = B.x, y2 = B.y;
             float x3 = C.x, y3 = C.y;
 
-            float a = x1 - x3;
-            float b = y1 - y3;
-            float c = x2 - x3;
-            float d = y2 - y3;
+            var a = x1 - x3;
+            var b = y1 - y3;
+            var c = x2 - x3;
+            var d = y2 - y3;
 
-            float e = a * (x1 + x3) + b * (y1 + y3);
-            float f = c * (x2 + x3) + d * (y2 + y3);
+            var e = a * (x1 + x3) + b * (y1 + y3);
+            var f = c * (x2 + x3) + d * (y2 + y3);
 
-            float g = 2.0f * (a * d - b * c);
+            var g = 2.0f * (a * d - b * c);
 
             if (Mathf.Abs(g) < 1e-6f)
             {

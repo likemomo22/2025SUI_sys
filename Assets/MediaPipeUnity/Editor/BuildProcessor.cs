@@ -1,13 +1,16 @@
 using UnityEditor;
 
 [InitializeOnLoad]
-class UnityEditorStartup {
-  static UnityEditorStartup() {
-    BuildPlayerWindow.RegisterBuildPlayerHandler(
-      new System.Action<BuildPlayerOptions>(buildPlayerOptions => {
-        CreateAssetBundles.BuildAllAssetBundles();
-        BuildPlayerWindow.DefaultBuildMethods.BuildPlayer(buildPlayerOptions);
-      })
-    );
-  }
+internal class UnityEditorStartup
+{
+    static UnityEditorStartup()
+    {
+        BuildPlayerWindow.RegisterBuildPlayerHandler(
+            buildPlayerOptions =>
+            {
+                CreateAssetBundles.BuildAllAssetBundles();
+                BuildPlayerWindow.DefaultBuildMethods.BuildPlayer(buildPlayerOptions);
+            }
+        );
+    }
 }

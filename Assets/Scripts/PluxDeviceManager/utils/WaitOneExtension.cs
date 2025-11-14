@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+using System.Threading;
 #if !NO_UNITY
-using UnityEngine;
 #endif
 
 namespace UnityThreading
 {
-	public static class WaitOneExtension
-	{
+    public static class WaitOneExtension
+    {
 #if UNITY_WEBPLAYER
 		private static System.Reflection.MethodInfo WaitOneMilliseconds;
 		private static System.Reflection.MethodInfo WaitOneTimeSpan;
@@ -33,15 +29,15 @@ namespace UnityThreading
 			return (bool)WaitOneTimeSpan.Invoke(that, new object[1] { duration });
 		}
 #else
-		public static bool InterWaitOne(this System.Threading.ManualResetEvent that, int ms)
-		{
-			return that.WaitOne(ms, false);
-		}
+        public static bool InterWaitOne(this ManualResetEvent that, int ms)
+        {
+            return that.WaitOne(ms, false);
+        }
 
-		public static bool InterWaitOne(this System.Threading.ManualResetEvent that, TimeSpan duration)
-		{
-			return that.WaitOne(duration, false);
-		}
+        public static bool InterWaitOne(this ManualResetEvent that, TimeSpan duration)
+        {
+            return that.WaitOne(duration, false);
+        }
 #endif
-	}
+    }
 }

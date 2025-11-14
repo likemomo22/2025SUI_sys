@@ -26,129 +26,137 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mediapipe.Unity.Sample;
 using UnityEditor;
 using UnityEngine;
 
 public static class PackageExporter
 {
-  [MenuItem("Tools/Export Unitypackage")]
-  public static void Export()
-  {
-    // Default Asset Loader Type is Local
-    OverwriteAssetLoaderType(Mediapipe.Unity.Sample.AppSettings.AssetLoaderType.Local);
-
-    var packageRoot = Path.Combine(Application.dataPath, "..", "Packages", "com.github.homuler.mediapipe");
-    var version = GetVersion(packageRoot);
-
-    var fileName = string.IsNullOrEmpty(version) ? "MediaPipeUnity.unitypackage" : $"MediaPipeUnity.{version}.unitypackage";
-    var exportPath = "./" + fileName;
-
-    var pluginAssets = EnumerateAssets(Path.Combine("Packages", "com.github.homuler.mediapipe"))
-      .Append(Path.Combine("Packages", "com.github.homuler.mediapipe", "Runtime", "Plugins", "iOS", "MediaPipeUnity.framework"));
-    var sampleAssets = EnumerateAssets(Path.Combine("Assets", "MediaPipeUnity", "Samples"), new string[] { ".cs", ".unity" });
-    var tutorialAssets = EnumerateAssets(Path.Combine("Assets", "MediaPipeUnity", "Tutorial")); // export all the files
-    var assets = pluginAssets.Concat(sampleAssets).Concat(tutorialAssets).ToArray();
-
-    Debug.Log("Export below files" + Environment.NewLine + string.Join(Environment.NewLine, assets));
-
-    AssetDatabase.ExportPackage(
-        assets,
-        exportPath,
-        ExportPackageOptions.IncludeDependencies);
-
-    Debug.Log("Export complete: " + Path.GetFullPath(exportPath));
-  }
-
-  private static IEnumerable<string> EnumerateAssets(string path)
-  {
-    var projectRoot = Path.Combine(Application.dataPath, "..");
-    var assetRoot = Path.Combine(projectRoot, path);
-
-    return Directory.EnumerateFiles(assetRoot, "*", SearchOption.AllDirectories)
-        .Select(x => path + x.Replace(assetRoot, "").Replace(@"\", "/"));
-  }
-
-  private static IEnumerable<string> EnumerateAssets(string path, string[] extensions)
-  {
-    return EnumerateAssets(path).Where(x => Array.IndexOf(extensions, Path.GetExtension(x)) >= 0);
-  }
-
-  private static string GetVersion(string packagePath)
-  {
-    var version = Environment.GetEnvironmentVariable("UNITY_PACKAGE_VERSION");
-    var packageJsonPath = Path.Combine(packagePath, "package.json");
-
-    if (File.Exists(packageJsonPath))
+    [MenuItem("Tools/Export Unitypackage")]
+    public static void Export()
     {
-      var packageJson = JsonUtility.FromJson<PackageJson>(File.ReadAllText(packageJsonPath));
+        // Default Asset Loader Type is Local
+        OverwriteAssetLoaderType(AppSettings.AssetLoaderType.Local);
 
-      if (!string.IsNullOrEmpty(version))
-      {
-        if (packageJson.version != version)
+        var packageRoot = Path.Combine(Application.dataPath, "..", "Packages", "com.github.homuler.mediapipe");
+        var version = GetVersion(packageRoot);
+
+        var fileName = string.IsNullOrEmpty(version)
+            ? "MediaPipeUnity.unitypackage"
+            : $"MediaPipeUnity.{version}.unitypackage";
+        var exportPath = "./" + fileName;
+
+        var pluginAssets = EnumerateAssets(Path.Combine("Packages", "com.github.homuler.mediapipe"))
+            .Append(Path.Combine("Packages", "com.github.homuler.mediapipe", "Runtime", "Plugins", "iOS",
+                "MediaPipeUnity.framework"));
+        var sampleAssets =
+            EnumerateAssets(Path.Combine("Assets", "MediaPipeUnity", "Samples"), new[] { ".cs", ".unity" });
+        var tutorialAssets =
+            EnumerateAssets(Path.Combine("Assets", "MediaPipeUnity", "Tutorial")); // export all the files
+        var assets = pluginAssets.Concat(sampleAssets).Concat(tutorialAssets).ToArray();
+
+        Debug.Log("Export below files" + Environment.NewLine + string.Join(Environment.NewLine, assets));
+
+        AssetDatabase.ExportPackage(
+            assets,
+            exportPath,
+            ExportPackageOptions.IncludeDependencies);
+
+        Debug.Log("Export complete: " + Path.GetFullPath(exportPath));
+    }
+
+    private static IEnumerable<string> EnumerateAssets(string path)
+    {
+        var projectRoot = Path.Combine(Application.dataPath, "..");
+        var assetRoot = Path.Combine(projectRoot, path);
+
+        return Directory.EnumerateFiles(assetRoot, "*", SearchOption.AllDirectories)
+            .Select(x => path + x.Replace(assetRoot, "").Replace(@"\", "/"));
+    }
+
+    private static IEnumerable<string> EnumerateAssets(string path, string[] extensions)
+    {
+        return EnumerateAssets(path).Where(x => Array.IndexOf(extensions, Path.GetExtension(x)) >= 0);
+    }
+
+    private static string GetVersion(string packagePath)
+    {
+        var version = Environment.GetEnvironmentVariable("UNITY_PACKAGE_VERSION");
+        var packageJsonPath = Path.Combine(packagePath, "package.json");
+
+        if (File.Exists(packageJsonPath))
         {
-          var msg = $"package.json and env version are mismatched. UNITY_PACKAGE_VERSION:{version}, package.json:{packageJson.version}";
+            var packageJson = JsonUtility.FromJson<PackageJson>(File.ReadAllText(packageJsonPath));
 
-          if (Application.isBatchMode)
-          {
-            Console.WriteLine(msg);
-            Application.Quit(1);
-          }
+            if (!string.IsNullOrEmpty(version))
+                if (packageJson.version != version)
+                {
+                    var msg =
+                        $"package.json and env version are mismatched. UNITY_PACKAGE_VERSION:{version}, package.json:{packageJson.version}";
 
-          throw new Exception("package.json and env version are mismatched.");
+                    if (Application.isBatchMode)
+                    {
+                        Console.WriteLine(msg);
+                        Application.Quit(1);
+                    }
+
+                    throw new Exception("package.json and env version are mismatched.");
+                }
+
+            version = packageJson.version;
         }
-      }
 
-      version = packageJson.version;
+        return version;
     }
 
-    return version;
-  }
-
-  private static void OverwriteAssetLoaderType(Mediapipe.Unity.Sample.AppSettings.AssetLoaderType assetLoaderType)
-  {
-    var appSettings = AssetDatabase.LoadAssetAtPath<Mediapipe.Unity.Sample.AppSettings>("Assets/MediaPipeUnity/Samples/Scenes/AppSettings.asset");
-    appSettings.assetLoaderType = assetLoaderType;
-
-    EditorUtility.SetDirty(appSettings);
-    AssetDatabase.SaveAssets();
-    AssetDatabase.Refresh();
-  }
-
-  public class PackageJson
-  {
-    public string name;
-    public string version;
-    public string displayName;
-    public string description;
-    public string unity;
-    public Author author;
-    public string changelogUrl;
-    // public Dictionary<string, string> dependencies;
-    public string documentationUrl;
-    public bool hideInEditor;
-    public List<string> keywords;
-    public string license;
-    public string licenseUrl;
-    public List<Sample> samples;
-    public string type;
-    public string unityRelease;
-
-    [Serializable]
-    public class Author
+    private static void OverwriteAssetLoaderType(AppSettings.AssetLoaderType assetLoaderType)
     {
-      public string name;
-      public string email;
-      public string url;
+        var appSettings =
+            AssetDatabase.LoadAssetAtPath<AppSettings>("Assets/MediaPipeUnity/Samples/Scenes/AppSettings.asset");
+        appSettings.assetLoaderType = assetLoaderType;
+
+        EditorUtility.SetDirty(appSettings);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
     }
 
-    [Serializable]
-    public class Sample
+    public class PackageJson
     {
-      public string displayName;
-      public string description;
-      public string path;
+        public Author author;
+        public string changelogUrl;
+        public string description;
+
+        public string displayName;
+
+        // public Dictionary<string, string> dependencies;
+        public string documentationUrl;
+        public bool hideInEditor;
+        public List<string> keywords;
+        public string license;
+        public string licenseUrl;
+        public string name;
+        public List<Sample> samples;
+        public string type;
+        public string unity;
+        public string unityRelease;
+        public string version;
+
+        [Serializable]
+        public class Author
+        {
+            public string name;
+            public string email;
+            public string url;
+        }
+
+        [Serializable]
+        public class Sample
+        {
+            public string displayName;
+            public string description;
+            public string path;
+        }
     }
-  }
 }
 
 #endif

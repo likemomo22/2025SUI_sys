@@ -5,55 +5,30 @@
 // https://opensource.org/licenses/MIT.
 
 using NUnit.Framework;
-using System;
 
 namespace Mediapipe.Tests
 {
-  public class GlContextTest
-  {
-    #region .GetCurrent
-    [Test, GpuOnly]
-    public void GetCurrent_ShouldReturnNull_When_CalledOutOfGlContext()
+    public class GlContextTest
     {
-      var glContext = GlContext.GetCurrent();
+        #region #IsCurrent
 
-      Assert.Null(glContext);
-    }
-
-    [Test, GpuOnly]
-    public void GetCurrent_ShouldReturnCurrentContext_When_CalledInGlContext()
-    {
-      using (var glCalculatorHelper = new GlCalculatorHelper())
-      {
-        glCalculatorHelper.InitializeForTest(GpuResources.Create());
-
-        glCalculatorHelper.RunInGlContext(() =>
+        public void IsCurrent_ShouldReturnFalse_When_CalledOutOfGlContext()
         {
-          using (var glContext = GlContext.GetCurrent())
-          {
-            Assert.NotNull(glContext);
-            Assert.True(glContext.IsCurrent());
-          }
-        });
-      }
-    }
-    #endregion
+            var glContext = GetGlContext();
 
-    #region #IsCurrent
-    public void IsCurrent_ShouldReturnFalse_When_CalledOutOfGlContext()
-    {
-      var glContext = GetGlContext();
+            Assert.False(glContext.IsCurrent());
+        }
 
-      Assert.False(glContext.IsCurrent());
-    }
-    #endregion
+        #endregion
 
-    #region properties
-    [Test, GpuOnly]
-    public void ShouldReturnProperties()
-    {
-      using (var glContext = GetGlContext())
-      {
+        #region properties
+
+        [Test]
+        [GpuOnly]
+        public void ShouldReturnProperties()
+        {
+            using (var glContext = GetGlContext())
+            {
 #if UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX || UNITY_ANDROID
         Assert.AreNotEqual(IntPtr.Zero, glContext.eglDisplay);
         Assert.AreNotEqual(IntPtr.Zero, glContext.eglConfig);
@@ -66,18 +41,51 @@ namespace Mediapipe.Tests
 #elif UNITY_IOS
         Assert.AreNotEqual(IntPtr.Zero, glContext.eaglContext);
 #endif
-      }
-    }
-    #endregion
+            }
+        }
 
-    private GlContext GetGlContext()
-    {
-      using (var glCalculatorHelper = new GlCalculatorHelper())
-      {
-        glCalculatorHelper.InitializeForTest(GpuResources.Create());
+        #endregion
 
-        return glCalculatorHelper.GetGlContext();
-      }
+        private GlContext GetGlContext()
+        {
+            using (var glCalculatorHelper = new GlCalculatorHelper())
+            {
+                glCalculatorHelper.InitializeForTest(GpuResources.Create());
+
+                return glCalculatorHelper.GetGlContext();
+            }
+        }
+
+        #region .GetCurrent
+
+        [Test]
+        [GpuOnly]
+        public void GetCurrent_ShouldReturnNull_When_CalledOutOfGlContext()
+        {
+            var glContext = GlContext.GetCurrent();
+
+            Assert.Null(glContext);
+        }
+
+        [Test]
+        [GpuOnly]
+        public void GetCurrent_ShouldReturnCurrentContext_When_CalledInGlContext()
+        {
+            using (var glCalculatorHelper = new GlCalculatorHelper())
+            {
+                glCalculatorHelper.InitializeForTest(GpuResources.Create());
+
+                glCalculatorHelper.RunInGlContext(() =>
+                {
+                    using (var glContext = GlContext.GetCurrent())
+                    {
+                        Assert.NotNull(glContext);
+                        Assert.True(glContext.IsCurrent());
+                    }
+                });
+            }
+        }
+
+        #endregion
     }
-  }
 }

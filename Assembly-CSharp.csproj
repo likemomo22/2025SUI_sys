@@ -53,6 +53,7 @@
     <Compile Include="Assets\MediaPipeUnity\Tutorial\Tasks\FaceLandmarkerRunner.cs" />
     <Compile Include="Assets\Scripts\MirrorCanvasScript\CameraDisplay.cs" />
     <Compile Include="Assets\Scripts\ArmGuideLine\ArcBandMathChecker.cs" />
+    <Compile Include="Assets\Scripts\MainCanvasver2\UIControl\CircleVisible\SetCircleVisible.cs" />
     <Compile Include="Assets\Scripts\PluxDeviceManager\utils\TaskExtension.cs" />
     <Compile Include="Assets\Scripts\PluxDeviceManager\utils\UnityThreadHelper.cs" />
     <Compile Include="Assets\Scripts\ArmGuideLine\BandCollisionState.cs" />

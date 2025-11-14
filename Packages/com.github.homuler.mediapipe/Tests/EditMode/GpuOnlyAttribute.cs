@@ -4,11 +4,13 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-using NUnit.Framework;
 using System;
+using NUnit.Framework;
 
 namespace Mediapipe
 {
-  [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-  public class GpuOnlyAttribute : CategoryAttribute { }
+    [AttributeUsage(AttributeTargets.Method)]
+    public class GpuOnlyAttribute : CategoryAttribute
+    {
+    }
 }

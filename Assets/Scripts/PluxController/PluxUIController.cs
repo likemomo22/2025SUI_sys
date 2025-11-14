@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using ArmGuideLine;
 using UnityEngine;
 using UnityEngine.UI;
 using utils;
 using Utils;
-using ArmGuideLine;
-
 
 namespace PluxController
 {
     public class PluxUIController : MonoBehaviour
     {
-        [Header("UI Elements")]
-        public GameObject popupPanel;
+        [Header("UI Elements")] public GameObject popupPanel;
+
         public Button openPopupButton;
         public Button closePopupButton;
 
@@ -22,29 +21,30 @@ namespace PluxController
         public Button stopButton;
         public Button disconnectButton;
 
-        public int SamplingRate=1000;
+        public int SamplingRate = 1000;
 
-        private CsvLogger _csvLogger = new CsvLogger();
-
-        // ✅ 多通道数据处理器（初始化时设置通道数）
-        private PluxDataProcessor _dataProcessor;
-        
         public LineAreaCollisionChecker checker;
         public PoseLandmarkTracker tracker;
         public RectTransform targetCanvas; // 用于canvas坐标转换
 
         public LineOnCircleMover mover;
+
         // ✅ 多个 UI 圆圈控制器（在 Inspector 中设置）
         public MuscleCircleController.MuscleCircleController[] muscleCircleControllers;
+
+        private readonly CsvLogger _csvLogger = new();
+
+        // ✅ 多通道数据处理器（初始化时设置通道数）
+        private PluxDataProcessor _dataProcessor;
+        private bool _isAcquisitionRunning;
+
+        private bool _isConnected;
 
         private PluxDeviceManager _pluxManager;
         private string _selectedMac = "";
 
-        private bool _isConnected = false;
-        private bool _isAcquisitionRunning = false;
-
         [Obsolete("Obsolete")]
-        void Start()
+        private void Start()
         {
             openPopupButton.onClick.AddListener(OpenPopup);
             closePopupButton.onClick.AddListener(ClosePopup);
@@ -70,17 +70,24 @@ namespace PluxController
             popupPanel.SetActive(false);
         }
 
-        void OpenPopup() => popupPanel.SetActive(true);
-        void ClosePopup() => popupPanel.SetActive(false);
+        private void OpenPopup()
+        {
+            popupPanel.SetActive(true);
+        }
+
+        private void ClosePopup()
+        {
+            popupPanel.SetActive(false);
+        }
 
         [Obsolete("Obsolete")]
-        void OnScanClick()
+        private void OnScanClick()
         {
             Debug.Log("开始扫描设备...");
             _pluxManager.GetDetectableDevicesUnity(new List<string> { "BTH" });
         }
 
-        void OnConnectClick()
+        private void OnConnectClick()
         {
             if (!string.IsNullOrEmpty(_selectedMac))
             {
@@ -93,7 +100,7 @@ namespace PluxController
             }
         }
 
-        void OnStartClick()
+        private void OnStartClick()
         {
             if (!_isConnected)
             {
@@ -113,13 +120,13 @@ namespace PluxController
                 _csvLogger.Init();
                 _pluxManager.StartAcquisitionUnity(SamplingRate, new List<int> { 1, 2, 3 }, 16); // 根据需要设置通道编号
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Debug.LogError("采集启动失败: " + ex.Message);
             }
         }
 
-        void OnStopClick()
+        private void OnStopClick()
         {
             if (!_isAcquisitionRunning)
             {
@@ -127,13 +134,13 @@ namespace PluxController
                 return;
             }
 
-            bool result = _pluxManager.StopAcquisitionUnity();
+            var result = _pluxManager.StopAcquisitionUnity();
             Debug.Log("⏹ 采集已停止（是否强制）: " + result);
             _isAcquisitionRunning = false;
             _csvLogger.FinalizeLog();
         }
 
-        void OnDisconnectClick()
+        private void OnDisconnectClick()
         {
             if (!_isConnected)
             {
@@ -147,7 +154,7 @@ namespace PluxController
             _isAcquisitionRunning = false;
         }
 
-        void ScanResults(List<string> listDevices)
+        private void ScanResults(List<string> listDevices)
         {
             if (listDevices.Count > 0)
             {
@@ -160,58 +167,54 @@ namespace PluxController
             }
         }
 
-        void ConnectionDone(bool status)
+        private void ConnectionDone(bool status)
         {
             _isConnected = status;
             Debug.Log("🔗 连接状态: " + (status ? "成功 ✅" : "失败 ❌"));
         }
 
-        void AcquisitionStarted(bool success, bool exceptionRaised, string msg)
+        private void AcquisitionStarted(bool success, bool exceptionRaised, string msg)
         {
             _isAcquisitionRunning = success;
             Debug.Log($"🎬 采集状态: {(success ? "成功 ✅" : "失败 ❌")}，异常: {exceptionRaised}，信息: {msg}");
 
-            if (!success && exceptionRaised)
-            {
-                Debug.LogError("❗ 采集过程中出现异常: " + msg);
-            }
+            if (!success && exceptionRaised) Debug.LogError("❗ 采集过程中出现异常: " + msg);
         }
 
-        void OnDataReceived(int nSeq, int[] data)
+        private void OnDataReceived(int nSeq, int[] data)
         {
             // ========== 判定区域 ==========
 
-            Vector2 wristCanvasPos = GetWristLandmarkCanvasPosition();
+            var wristCanvasPos = GetWristLandmarkCanvasPosition();
 
             // 你用的全局参数
-            Vector2 arcCenter = GlobalText.CircleCenter;
-            Vector2 arcStart  = GlobalText.CircleBottom;
-            Vector2 arcEnd    = GlobalText.CircleMid;
-            float arcBaseRadius = GlobalText.CircleRadius;
-            float innerR = arcBaseRadius + mover.arcInnerOffset;
-            float outerR = arcBaseRadius + mover.arcOuterOffset;
-            float angleStart = Mathf.Atan2(arcStart.y - arcCenter.y, arcStart.x - arcCenter.x);
-            float angleEnd   = Mathf.Atan2(arcEnd.y   - arcCenter.y, arcEnd.x   - arcCenter.x);
+            var arcCenter = GlobalText.circleCenter;
+            var arcStart = GlobalText.circleBottom;
+            var arcEnd = GlobalText.circleMid;
+            var arcBaseRadius = GlobalText.circleRadius;
+            var innerR = arcBaseRadius + mover.arcInnerOffset;
+            var outerR = arcBaseRadius + mover.arcOuterOffset;
+            var angleStart = Mathf.Atan2(arcStart.y - arcCenter.y, arcStart.x - arcCenter.x);
+            var angleEnd = Mathf.Atan2(arcEnd.y - arcCenter.y, arcEnd.x - arcCenter.x);
 
             // 判定
-            var arcZone = ArmGuideLine.ArcBandMathChecker.GetArcZone(
+            var arcZone = ArcBandMathChecker.GetArcZone(
                 wristCanvasPos, arcCenter, innerR, outerR, angleStart, angleEnd
             );
 
-            int arcStateForCsv = 0;
+            var arcStateForCsv = 0;
             switch (arcZone)
             {
-                
-                case ArmGuideLine.ArcBandMathChecker.ArcZone.Inner: arcStateForCsv = -1; break;
-                case ArmGuideLine.ArcBandMathChecker.ArcZone.Outer: arcStateForCsv =  1; break;
-                case ArmGuideLine.ArcBandMathChecker.ArcZone.Between: arcStateForCsv = 0; break;
+                case ArcBandMathChecker.ArcZone.Inner: arcStateForCsv = -1; break;
+                case ArcBandMathChecker.ArcZone.Outer: arcStateForCsv = 1; break;
+                case ArcBandMathChecker.ArcZone.Between: arcStateForCsv = 0; break;
             }
 
-            BandCollisionState state = checker != null
+            var state = checker != null
                 ? checker.JudgeBandPosition(wristCanvasPos)
                 : BandCollisionState.Inside; // 没连checker时默认Inside
 
-            int movePhase = (int)mover.GetCurrentMovePhase(); // 0=Moving, 1=Waiting
+            var movePhase = (int)mover.GetCurrentMovePhase(); // 0=Moving, 1=Waiting
 
             // ========== 写入 ==========
             // 这里 arcStateForCsv 就是你要的新状态
@@ -221,33 +224,31 @@ namespace PluxController
         }
 
         // 关键：当前帧手腕canvas位置（和判定时写入同步！）
-        Vector2 GetWristLandmarkCanvasPosition()
+        private Vector2 GetWristLandmarkCanvasPosition()
         {
             if (tracker == null || targetCanvas == null)
                 return Vector2.zero;
             Vector2 wristCanvasPos;
-            int wristLandmarkIndex = 15; // 右手腕，左手可用16
-            bool success = tracker.TryGetCanvasLandmarkPosition(wristLandmarkIndex, targetCanvas, out wristCanvasPos);
+            var wristLandmarkIndex = 15; // 右手腕，左手可用16
+            var success = tracker.TryGetCanvasLandmarkPosition(wristLandmarkIndex, targetCanvas, out wristCanvasPos);
             return success ? wristCanvasPos : Vector2.zero;
         }
 
-        void OnEventDetected(PluxDeviceManager.PluxEvent e)
+        private void OnEventDetected(PluxDeviceManager.PluxEvent e)
         {
             Debug.Log("🧭 事件: " + e.type);
         }
 
-        void OnExceptionRaised(int code, string desc)
+        private void OnExceptionRaised(int code, string desc)
         {
             Debug.LogError($"⚠️ 异常 [{code}]: {desc}");
         }
 
         // ✅ 多通道 UI 更新
-        void UpdateUIWithSmoothedValue(int channelIndex, float value)
+        private void UpdateUIWithSmoothedValue(int channelIndex, float value)
         {
             if (channelIndex < muscleCircleControllers.Length && muscleCircleControllers[channelIndex] != null)
-            {
                 muscleCircleControllers[channelIndex].SetValue(value);
-            }
         }
     }
 }

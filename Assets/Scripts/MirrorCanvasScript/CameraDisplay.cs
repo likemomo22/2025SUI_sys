@@ -1,21 +1,20 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace MirrorCanvasScript
 {
-    public class CameraDisplay: MonoBehaviour
+    public class CameraDisplay : MonoBehaviour
     {
         public RawImage rawImage;
         private WebCamTexture _webCamTexture;
 
-        void Start()
+        private void Start()
         {
-            WebCamDevice[] devices = WebCamTexture.devices;
+            var devices = WebCamTexture.devices;
             if (devices.Length > 0)
             {
                 Debug.Log("VAR");
-                string camName = devices[0].name;
+                var camName = devices[0].name;
                 _webCamTexture = new WebCamTexture(camName, 1280, 720, 30);
                 rawImage.texture = _webCamTexture;
                 rawImage.material.mainTexture = _webCamTexture;
@@ -32,10 +31,7 @@ namespace MirrorCanvasScript
 
         private void OnDestroy()
         {
-            if (_webCamTexture != null && _webCamTexture.isPlaying)
-            {
-                _webCamTexture.Stop();
-            }
+            if (_webCamTexture != null && _webCamTexture.isPlaying) _webCamTexture.Stop();
         }
     }
 }

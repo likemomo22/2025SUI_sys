@@ -1,202 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Runtime.InteropServices;
 using System.Threading;
+using UnityEngine;
 
 //using Boo.Lang.Runtime;
 
 public class PluxDeviceManager
 {
-    // Declaration of DllImport statements for accessing the functions inside our native PLUX .dll
-    [DllImport("plux_unity_interface")]
-    private static extern int WelcomeFunction();
-    [DllImport("plux_unity_interface")]
-    private static extern void PluxDevUnity(string macAddress);
-    [DllImport("plux_unity_interface")]
-    private static extern void DisconnectPluxDevUnity();
-    [DllImport("plux_unity_interface", CallingConvention = CallingConvention.Cdecl)]
-    private static extern void StartAcquisitionBySources(int samplingRate, [In] IntPtr sourcesArray, int nbrSources);
-    [DllImport("plux_unity_interface")]
-    private static extern void StartAcquisitionByNbr(int samplingRate, int numberOfChannel, int resolution);
-    [DllImport("plux_unity_interface")]
-    private static extern void StartAcquisition(int samplingRate, string activeChannels, int resolution);
-    [DllImport("plux_unity_interface")]
-    private static extern void StartAcquisitionMuscleBan(int samplingRate, string activeChannels, int resolution, int freqDivisor);
-    [DllImport("plux_unity_interface")]
-    private static extern void StartLoop();
-    [DllImport("plux_unity_interface")]
-    private static extern void StopAcquisition();
-    [DllImport("plux_unity_interface")]
-    private static extern void InterruptAcquisition();
-    [DllImport("plux_unity_interface")]
-    private static extern int SendDataTo(IntPtr dataIn);
-    [DllImport("plux_unity_interface")]
-    private static extern int GetNbrChannels();
-    [DllImport("plux_unity_interface")]
-    private static extern bool GetCommunicationFlag();
-    [DllImport("plux_unity_interface")]
-    private static extern int GetBattery();
-    [DllImport("plux_unity_interface")]
-    private static extern void GetDetectableDevices(string domain);
-    [DllImport("plux_unity_interface")]
-    private static extern void GetAllDetectableDevices();
-    [DllImport("plux_unity_interface")]
-    private static extern int GetProductId();
-    [DllImport("plux_unity_interface")]
-    private static extern System.IntPtr GetDeviceType();
-    [DllImport("plux_unity_interface")]
-    private static extern void SetNewDeviceFoundHandler(IntPtr handlerFunction);
-    [DllImport("plux_unity_interface")]
-    private static extern void SetOnRawDataHandler(OnRawFrameReceived handlerFunction);
-    [DllImport("plux_unity_interface")]
-    private static extern void SetOnExceptionRaisedHandler(OnExceptionRaised handlerFunction);
-    [DllImport("plux_unity_interface")]
-    private static extern void SetOnEventDetectedHandlers(OnDisconnectEventRaised disconnectEventHandlerFunction, OnDigInUpdateEventRaised digInUpdateEventHandlerFunction);
-    [DllImport("plux_unity_interface")]
-    private static extern void SetParameter(int port, int index, [In] IntPtr data, int dataLen);
+    public delegate void AcquisitionStarted(bool acquisitionStatus, bool exceptionRaised = false,
+        string exceptioDescription = "");
 
-    // Declaration of a Plux::Source structure shared with the .dll.
-    [StructLayout(LayoutKind.Sequential)]
-    public struct PluxSource
-    {
-        public int port;
-        public int freqDivisor;
-        public int nBits;
-        public int chMask;
+    public delegate void ConnectionDone(bool connectionStatus);
 
-        // Constructor responsible for the creation of a Plux::Source.
-        // port -> Source port (1...8 for analog ports). Default value is zero.
-        // freqDivisor -> Source frequency divisor from acquisition base frequency (>= 1). Default value is 1.
-        // nBits -> Source sampling resolution in bits (8 or 16). Default value is 16.
-        // chMask -> Bitmask of source channels to sample (bit 0 is channel 0, etc). Default value is 1 (channel 0 only).
-        public PluxSource(int port = 0, int freqDivisor = 1, int nBits = 16, int chMask = 1)
-        {
-            this.port = port;
-            this.freqDivisor = freqDivisor;
-            this.nBits = nBits;
-            this.chMask = chMask;
-        }
-    }
+    public delegate void OnDigInUpdateEventRaised(PluxDigInUpdateEvent.PluxClock.ClockSources clockSource,
+        int clockValue, int channel, bool state);
 
-    // Declaration of the Plux::Event class.
-    public class PluxEvent
-    {
-        // Enumerator defining the types of events that can be raised by the PLUX API.
-        public enum PluxEvents
-        {
-            DigInUpdate = 3, // Digital Input Updated
-            Disconnect = 8 // Disconnect Event
-        }
+    public delegate void OnDisconnectEventRaised(PluxDisconnectEvent.PluxDisconnectReason reason);
 
-        public PluxEvents type;
+    public delegate void OnEventDetected(PluxEvent pluxEvent);
 
-        // Constructor responsible for the creation of a Plux::Event.
-        // type -> PluxEvents enumerator key that identifies the type of event under analysis.
-        public PluxEvent(PluxEvents type)
-        {
-            this.type = type;
-        }
+    public delegate void OnExceptionRaised(int exceptionCode, string exceptionDescription);
 
-    }
-
-    // Declaration of a Plux::DigInUpdateEvent structure shared with the .dll.
-    public class PluxDigInUpdateEvent : PluxEvent
-    {
-        // Event timestamp class.
-        public struct PluxClock
-        {
-            // Enumerator defining the available clock sources used in the PluxDigInUpdateEvent.
-            public enum ClockSources
-            {
-                None,
-                RTC,
-                FrameCount,
-                Bluetooth
-            }
-
-            public ClockSources source;
-            public int value;
-
-            // Constructor responsible for the creation of a Plux::Clock.
-            // source -> Clock source for the current timestamp.
-            // value -> Timestamp value.
-            public PluxClock(ClockSources source = ClockSources.None, int value = 0)
-            {
-                this.source = source;
-                this.value = value;
-            }
-        }
-
-        public PluxClock timestamp;
-        public int channel;
-        public bool state;
-
-
-        // Constructor responsible for the creation of a Plux::EvtDigInUpdate.
-        // timestamp -> Event timestamp.
-        // channel -> The digital input which changed state, starting at zero.
-        // state -> New state of digital port input. If true, new state is High, otherwise it is Low.
-        public PluxDigInUpdateEvent(PluxClock timestamp, int channel, bool state) : base(PluxEvents.DigInUpdate)
-        {
-            this.timestamp = timestamp;
-            this.channel = channel;
-            this.state = state;
-        }
-    }
-
-    // Declaration of a Plux::EvtDisconnect structure shared with the .dll.
-    public class PluxDisconnectEvent : PluxEvent
-    {
-        /// Disconnect reason enumeration.
-        public enum PluxDisconnectReason
-        {
-            Timeout = 1,         // Connection timeout has elapsed.
-            ButtonPressed = 2,   // Device button was pressed.
-            BatDischarged = 4,   // Device battery is discharged.
-        };
-
-        public PluxDisconnectReason reason;
-
-
-        // Constructor responsible for the creation of a Plux::EvtDigInUpdate.
-        // reason -> Reason for the device disconnection.
-        public PluxDisconnectEvent(PluxDisconnectReason reason) : base(PluxEvents.Disconnect)
-        {
-            this.reason = reason;
-        }
-    }
+    public delegate void OnNewDeviceFound(string newDevice);
 
     // Delegates (needed for callback purposes).
     public delegate void OnRawFrame(int nSeq, int[] dataIn);
+
     public delegate void OnRawFrameReceived(int nSeq, IntPtr dataIn, int dataInSize);
-    public delegate void OnNewDeviceFound(string newDevice);
+
     public delegate void ScanResults(List<string> listDevices);
-    public delegate void ConnectionDone(bool connectionStatus);
-    public delegate void AcquisitionStarted(bool acquisitionStatus, bool exceptionRaised = false, string exceptioDescription = "");
-    public delegate void OnExceptionRaised(int exceptionCode, string exceptionDescription);
-    public delegate void OnEventDetected(PluxEvent pluxEvent);
-    public delegate void OnDisconnectEventRaised(PluxDisconnectEvent.PluxDisconnectReason reason);
-    public delegate void OnDigInUpdateEventRaised(PluxDigInUpdateEvent.PluxClock.ClockSources clockSource, int clockValue, int channel, bool state);
+
+    private static Lazy<List<string>> PluxDevsFound;
+
+    private static CallbackManager callbackPointer;
+
+    //private BufferAcqSamples BufferedSamples = new BufferAcqSamples();
+    private static Lazy<BufferAcqSamples> LazyObject;
+    private readonly AcquisitionStarted AcquisitionStartedCallback;
+    private readonly ConnectionDone ConnectionDoneCallback;
+    private readonly ScanResults ScanResultsCallback;
+    private bool AcquisitionStopped = true;
+    private Thread AcquisitionThread;
+    private string ActiveChannelsStr = "";
+    private BufferAcqSamples BufferedSamples;
+    private Thread ConnectionThread;
+    private int currThreadNumber;
+    private bool DeviceConnected;
+    private volatile object DoubleCheckLock;
+    private int SamplingRate;
 
     // [Generic Variables]
     private Thread ScanningThread;
-    private Thread ConnectionThread;
-    private Thread AcquisitionThread;
-    private ScanResults ScanResultsCallback;
-    private ConnectionDone ConnectionDoneCallback;
-    private AcquisitionStarted AcquisitionStartedCallback;
-    private static Lazy<List<String>> PluxDevsFound = null;
-    private bool DeviceConnected = false;
-    private int SamplingRate;
-    private string ActiveChannelsStr = "";
-    private bool AcquisitionStopped = true;
-    private static CallbackManager callbackPointer;
-    //private BufferAcqSamples BufferedSamples = new BufferAcqSamples();
-    private static Lazy<BufferAcqSamples> LazyObject = null;
-    private BufferAcqSamples BufferedSamples;
-    private volatile object DoubleCheckLock = null;
-    private int currThreadNumber = 0;
 
     // Contructor.
     // scanResultsCallback -> Callback function that will be invoked once the Bluetooth scan for PLUX devices ends.
@@ -205,40 +60,42 @@ public class PluxDeviceManager
     // onDataReceivedCallback -> Callback function invoked every time a new package of RAW data samples is transmitted by the API.
     // onEventDetectedCallback -> Callback invoked when an event is raised by the PLUX API.
     // onExceptionRaisedCallback -> Callback invoked when an exception is raised by the PLUX API.
-    public PluxDeviceManager(ScanResults scanResultsCallback, ConnectionDone connectionDoneCallback, AcquisitionStarted acquisitionStartedCallback, OnRawFrame onDataReceivedCallback, OnEventDetected onEventDetectedCallback, OnExceptionRaised onExceptionRaisedCallback)
+    public PluxDeviceManager(ScanResults scanResultsCallback, ConnectionDone connectionDoneCallback,
+        AcquisitionStarted acquisitionStartedCallback, OnRawFrame onDataReceivedCallback,
+        OnEventDetected onEventDetectedCallback, OnExceptionRaised onExceptionRaisedCallback)
     {
         LazyObject = new Lazy<BufferAcqSamples>(InitBufferedSamplesObject);
-        PluxDevsFound = new Lazy<List<String>>(InitiListDevFound);
+        PluxDevsFound = new Lazy<List<string>>(InitiListDevFound);
 
         // Scan callback.
-        this.ScanResultsCallback = new ScanResults(scanResultsCallback);
+        ScanResultsCallback = scanResultsCallback;
 
         // On connection successful callback.
-        this.ConnectionDoneCallback = new ConnectionDone(connectionDoneCallback);
+        ConnectionDoneCallback = connectionDoneCallback;
 
         // Storage of the AcquisitionStarted callback.
-        this.AcquisitionStartedCallback = new AcquisitionStarted(acquisitionStartedCallback);
+        AcquisitionStartedCallback = acquisitionStartedCallback;
 
         // Initialization of the variable storing the callback responsible for receiving the devices found during the scan.
-        OnNewDeviceFound onNewDeviceFoundHandler = new OnNewDeviceFound(OnNewDeviceFoundHandler);
-        GCHandle onNewDeviceFoundGCHandler = GCHandle.Alloc(onNewDeviceFoundHandler);
+        var onNewDeviceFoundHandler = new OnNewDeviceFound(OnNewDeviceFoundHandler);
+        var onNewDeviceFoundGCHandler = GCHandle.Alloc(onNewDeviceFoundHandler);
         SetNewDeviceFoundHandler(Marshal.GetFunctionPointerForDelegate(onNewDeviceFoundHandler));
 
         // Initialization of the variable storing the callback responsible for receiving the streamed data.
-        OnRawFrameReceived onRawDataHandler = new OnRawFrameReceived(OnRawFrameHandler);
-        GCHandle onRawDataGCHandler = GCHandle.Alloc(onRawDataHandler);
+        var onRawDataHandler = new OnRawFrameReceived(OnRawFrameHandler);
+        var onRawDataGCHandler = GCHandle.Alloc(onRawDataHandler);
         SetOnRawDataHandler(onRawDataHandler);
 
         // Initialization of the variable storing the callback responsible for receiving the exceptions raised in the PLUX API .dll.
-        OnExceptionRaised onExceptionRaisedHandler = new OnExceptionRaised(OnExceptionRaisedHandler);
-        GCHandle onExceptionRaisedGCHandler = GCHandle.Alloc(onExceptionRaisedHandler);
+        var onExceptionRaisedHandler = new OnExceptionRaised(OnExceptionRaisedHandler);
+        var onExceptionRaisedGCHandler = GCHandle.Alloc(onExceptionRaisedHandler);
         SetOnExceptionRaisedHandler(onExceptionRaisedHandler);
 
         // Initialization of the variables storing the callbacks responsible for receiving the events raised in the PLUX API .dll.
-        OnDisconnectEventRaised onDisconnectEventHandler = new OnDisconnectEventRaised(OnDisconnectEventHandler);
-        GCHandle onDisconnectEventGCHandler = GCHandle.Alloc(onDisconnectEventHandler);
-        OnDigInUpdateEventRaised onDigInEventHandler = new OnDigInUpdateEventRaised(OnDigInEventHandler);
-        GCHandle onDigInEventGCHandler = GCHandle.Alloc(onDigInEventHandler);
+        var onDisconnectEventHandler = new OnDisconnectEventRaised(OnDisconnectEventHandler);
+        var onDisconnectEventGCHandler = GCHandle.Alloc(onDisconnectEventHandler);
+        var onDigInEventHandler = new OnDigInUpdateEventRaised(OnDigInEventHandler);
+        var onDigInEventGCHandler = GCHandle.Alloc(onDigInEventHandler);
         SetOnEventDetectedHandlers(onDisconnectEventHandler, onDigInEventHandler);
 
         // Initialise helper object that manages threads creating during the scanning and connection processes.
@@ -246,10 +103,82 @@ public class PluxDeviceManager
 
         // Specification of the callback function (defined on this/the user Unity script) which will receive the acquired data
         // samples as inputs.
-        GCHandle onDataReceivedGCHandler = GCHandle.Alloc(onDataReceivedCallback);
-        GCHandle onEventDetectedGCHandler = GCHandle.Alloc(onEventDetectedCallback);
+        var onDataReceivedGCHandler = GCHandle.Alloc(onDataReceivedCallback);
+        var onEventDetectedGCHandler = GCHandle.Alloc(onEventDetectedCallback);
         SetCallbackHandler(onDataReceivedCallback, onEventDetectedCallback, onExceptionRaisedCallback);
     }
+
+    // Declaration of DllImport statements for accessing the functions inside our native PLUX .dll
+    [DllImport("plux_unity_interface")]
+    private static extern int WelcomeFunction();
+
+    [DllImport("plux_unity_interface")]
+    private static extern void PluxDevUnity(string macAddress);
+
+    [DllImport("plux_unity_interface")]
+    private static extern void DisconnectPluxDevUnity();
+
+    [DllImport("plux_unity_interface", CallingConvention = CallingConvention.Cdecl)]
+    private static extern void StartAcquisitionBySources(int samplingRate, [In] IntPtr sourcesArray, int nbrSources);
+
+    [DllImport("plux_unity_interface")]
+    private static extern void StartAcquisitionByNbr(int samplingRate, int numberOfChannel, int resolution);
+
+    [DllImport("plux_unity_interface")]
+    private static extern void StartAcquisition(int samplingRate, string activeChannels, int resolution);
+
+    [DllImport("plux_unity_interface")]
+    private static extern void StartAcquisitionMuscleBan(int samplingRate, string activeChannels, int resolution,
+        int freqDivisor);
+
+    [DllImport("plux_unity_interface")]
+    private static extern void StartLoop();
+
+    [DllImport("plux_unity_interface")]
+    private static extern void StopAcquisition();
+
+    [DllImport("plux_unity_interface")]
+    private static extern void InterruptAcquisition();
+
+    [DllImport("plux_unity_interface")]
+    private static extern int SendDataTo(IntPtr dataIn);
+
+    [DllImport("plux_unity_interface")]
+    private static extern int GetNbrChannels();
+
+    [DllImport("plux_unity_interface")]
+    private static extern bool GetCommunicationFlag();
+
+    [DllImport("plux_unity_interface")]
+    private static extern int GetBattery();
+
+    [DllImport("plux_unity_interface")]
+    private static extern void GetDetectableDevices(string domain);
+
+    [DllImport("plux_unity_interface")]
+    private static extern void GetAllDetectableDevices();
+
+    [DllImport("plux_unity_interface")]
+    private static extern int GetProductId();
+
+    [DllImport("plux_unity_interface")]
+    private static extern IntPtr GetDeviceType();
+
+    [DllImport("plux_unity_interface")]
+    private static extern void SetNewDeviceFoundHandler(IntPtr handlerFunction);
+
+    [DllImport("plux_unity_interface")]
+    private static extern void SetOnRawDataHandler(OnRawFrameReceived handlerFunction);
+
+    [DllImport("plux_unity_interface")]
+    private static extern void SetOnExceptionRaisedHandler(OnExceptionRaised handlerFunction);
+
+    [DllImport("plux_unity_interface")]
+    private static extern void SetOnEventDetectedHandlers(OnDisconnectEventRaised disconnectEventHandlerFunction,
+        OnDigInUpdateEventRaised digInUpdateEventHandlerFunction);
+
+    [DllImport("plux_unity_interface")]
+    private static extern void SetParameter(int port, int index, [In] IntPtr data, int dataLen);
 
     // [Redefinition of the imported methods ensuring that they are accessible on other scripts]
 
@@ -266,9 +195,10 @@ public class PluxDeviceManager
     {
         Console.WriteLine("Scanning Thread State: " + ScanningThread.ThreadState);
         Console.WriteLine("Selected Device being received: " + macAddress);
-        
+
         // Creation of new thread to manage the connection stage.
-        ConnectionThread = new Thread(() => ConnectToPluxDev(macAddress)); ;
+        ConnectionThread = new Thread(() => ConnectToPluxDev(macAddress));
+        ;
         ConnectionThread.Name = "CONNECTION_" + currThreadNumber;
         currThreadNumber++;
         ConnectionThread.Start();
@@ -285,7 +215,7 @@ public class PluxDeviceManager
 
             // Check if the connection was established with success.
             DeviceConnected = !IsExceptionInBuffer() ? true : false;
-            
+
             // Send data (connection status) to the MAIN THREAD.
             UnityThreadHelper.Dispatcher.Dispatch(() => ConnectionDoneCallback(DeviceConnected));
         }
@@ -325,7 +255,7 @@ public class PluxDeviceManager
     public void StartAcquisitionBySourcesUnity(int samplingRate, PluxSource[] sourcesArray)
     {
         // Reboot BufferedSamples object.
-        BufferAcqSamples bufferedSamples = LazyObject.Value;
+        var bufferedSamples = LazyObject.Value;
         lock (bufferedSamples)
         {
             bufferedSamples.reinitialise();
@@ -334,9 +264,9 @@ public class PluxDeviceManager
         if (!bufferedSamples.getUncaughtExceptionState())
         {
             // >>> Garbage collector memory management.
-            GCHandle pinnedArray = GCHandle.Alloc(sourcesArray, GCHandleType.Pinned);
+            var pinnedArray = GCHandle.Alloc(sourcesArray, GCHandleType.Pinned);
             // >>> Convert to a memory address.
-            IntPtr ptr = pinnedArray.AddrOfPinnedObject();
+            var ptr = pinnedArray.AddrOfPinnedObject();
             // >>> Call correspondent .dll method to start the real-time acquisition.
             StartAcquisitionBySources(samplingRate, ptr, sourcesArray.Length);
             // >>> Releasing memory.
@@ -347,7 +277,8 @@ public class PluxDeviceManager
         }
         else
         {
-            throw new Exception("Unable to start a real-time acquisition. It is probable that the connection between the computer and the PLUX device was broke");
+            throw new Exception(
+                "Unable to start a real-time acquisition. It is probable that the connection between the computer and the PLUX device was broke");
         }
 
         // Update global flag.
@@ -363,20 +294,14 @@ public class PluxDeviceManager
     public void StartAcquisitionUnity(int samplingRate, List<int> listChannels, int resolution)
     {
         // Conversion of List of active channels to a string format.
-        for (int i = 0; i < 11; i++)
-        {
+        for (var i = 0; i < 11; i++)
             if (listChannels.Contains(i + 1))
-            {
                 ActiveChannelsStr += "1";
-            }
             else
-            {
                 ActiveChannelsStr += "0";
-            }
-        }
 
         // Reboot BufferedSamples object.
-        BufferAcqSamples bufferedSamples = LazyObject.Value;
+        var bufferedSamples = LazyObject.Value;
         lock (bufferedSamples)
         {
             bufferedSamples.reinitialise();
@@ -392,7 +317,8 @@ public class PluxDeviceManager
         }
         else
         {
-            throw new Exception("Unable to start a real-time acquisition. It is probable that the connection between the computer and the PLUX device was broke");
+            throw new Exception(
+                "Unable to start a real-time acquisition. It is probable that the connection between the computer and the PLUX device was broke");
         }
 
         // Update global flag.
@@ -427,24 +353,19 @@ public class PluxDeviceManager
     //               compared with the ideal real case scenario.
     // freqDivisor -> Frequency divisor, i.e., acquired data will be subsampled accordingly to this parameter. If freqDivisor = 10, it means that each set of 10 acquired samples
     //                will trigger the communication of a single sample (through the communication loop).
-    public void StartAcquisitionMuscleBanUnity(int samplingRate, List<int> listChannels, int resolution, int freqDivisor)
+    public void StartAcquisitionMuscleBanUnity(int samplingRate, List<int> listChannels, int resolution,
+        int freqDivisor)
     {
         // Conversion of List of active channels to a string format.
-        for (int i = 0; i < 8; i++)
-        {
+        for (var i = 0; i < 8; i++)
             if (listChannels.Contains(i + 1))
-            {
                 ActiveChannelsStr += "1";
-            }
             else
-            {
                 ActiveChannelsStr += "0";
-            }
-        }
 
         // Start of acquisition.
         StartAcquisitionMuscleBan(samplingRate, ActiveChannelsStr, resolution, freqDivisor);
-        
+
         // Start Communication Loop.
         StartLoopUnity();
 
@@ -455,7 +376,8 @@ public class PluxDeviceManager
     // Trigger the start of the communication loop (between PLUX device and computer).
     private void StartLoopUnity()
     {
-        if(!IsExceptionInBuffer()) { 
+        if (!IsExceptionInBuffer())
+        {
             // Creation of new thread to manage the communication loop.
             AcquisitionThread = new Thread(StartLoop);
             AcquisitionThread.Name = "ACQUISITION_" + currThreadNumber;
@@ -478,21 +400,17 @@ public class PluxDeviceManager
     private bool IsExceptionInBuffer(bool raiseException = false)
     {
         // Lock is an essential step to ensure that variables shared by the same thread will not be accessed at the same time.
-        BufferAcqSamples bufferedSamples = LazyObject.Value;
+        var bufferedSamples = LazyObject.Value;
         lock (bufferedSamples)
         {
             if (bufferedSamples.getUncaughtExceptionState())
             {
                 bufferedSamples.deactUncaughtException();
                 if (raiseException)
-                {
                     throw new ExternalException(
                         "An exception with unknown origin was raised, but it is not fatal. It is probable that the device connection was lost...");
-                }
-                else
-                {
-                    return true;
-                }
+
+                return true;
             }
 
             return false;
@@ -527,14 +445,13 @@ public class PluxDeviceManager
         lock (callbackPointer)
         {
             // Convert our data pointer to an array format.
-            int[] dataArray = new int[dataInSize];
+            var dataArray = new int[dataInSize];
             Marshal.Copy(data, dataArray, 0, dataInSize);
 
             // Check if an exception was raised.
-            if (!IsExceptionInBuffer()) { 
+            if (!IsExceptionInBuffer())
                 // Send data (RAW frames) to the MAIN THREAD.
                 UnityThreadHelper.Dispatcher.Dispatch(() => callbackPointer.onRawFrameReference(nSeq, dataArray));
-            }
         }
     }
 
@@ -545,14 +462,16 @@ public class PluxDeviceManager
     {
         lock (callbackPointer)
         {
-            BufferAcqSamples bufferedSamples = LazyObject.Value;
+            var bufferedSamples = LazyObject.Value;
             lock (bufferedSamples)
             {
                 bufferedSamples.actUncaughtException();
-                Debug.Log("Exception being raised in the PLUX C++ API Wrapper:\n" + exceptionCode + " | " + exceptionDescription);
+                Debug.Log("Exception being raised in the PLUX C++ API Wrapper:\n" + exceptionCode + " | " +
+                          exceptionDescription);
 
                 // Inform the GUI about the raise of an exception.
-                UnityThreadHelper.Dispatcher.Dispatch(() => callbackPointer.OnExceptionRaisedReference(exceptionCode, exceptionDescription));
+                UnityThreadHelper.Dispatcher.Dispatch(() =>
+                    callbackPointer.OnExceptionRaisedReference(exceptionCode, exceptionDescription));
             }
         }
     }
@@ -564,7 +483,8 @@ public class PluxDeviceManager
         lock (callbackPointer)
         {
             // Send data (event) to the MAIN THREAD.
-            UnityThreadHelper.Dispatcher.Dispatch(() => callbackPointer.onEventDetectedReference(new PluxDisconnectEvent(reason)));
+            UnityThreadHelper.Dispatcher.Dispatch(() =>
+                callbackPointer.onEventDetectedReference(new PluxDisconnectEvent(reason)));
         }
     }
 
@@ -573,12 +493,16 @@ public class PluxDeviceManager
     // clockValue -> Timestamp value.
     // channel -> The digital input which changed state, starting at zero.
     // state -> New state of digital port input. If true, new state is High, otherwise it is Low.
-    private void OnDigInEventHandler(PluxDigInUpdateEvent.PluxClock.ClockSources clockSource, int clockValue, int channel, bool state)
+    private void OnDigInEventHandler(PluxDigInUpdateEvent.PluxClock.ClockSources clockSource, int clockValue,
+        int channel, bool state)
     {
         lock (callbackPointer)
         {
             // Send data (event) to the MAIN THREAD.
-            UnityThreadHelper.Dispatcher.Dispatch(() => callbackPointer.onEventDetectedReference(new PluxDigInUpdateEvent(new PluxDigInUpdateEvent.PluxClock(clockSource, clockValue), channel, state)));
+            UnityThreadHelper.Dispatcher.Dispatch(() =>
+                callbackPointer.onEventDetectedReference(
+                    new PluxDigInUpdateEvent(new PluxDigInUpdateEvent.PluxClock(clockSource, clockValue), channel,
+                        state)));
         }
     }
 
@@ -591,10 +515,10 @@ public class PluxDeviceManager
     // Method dedicated to stop the real-time acquisition.
     // forceStop -> An identifier that specify when the stop command was voluntarily sent by the user (>=0) or forced  by an event or exception (-1, -2...).
     // RETURN (bool): A flag identifying when the acquisition was stopped in a forced way (true) or triggered by the user (false).
-    public bool StopAcquisitionUnity(int forceStop=0)
+    public bool StopAcquisitionUnity(int forceStop = 0)
     {
         // Returned variable.
-        bool forceFlag = false;
+        var forceFlag = false;
 
         // Check if the StopButtonFunction was invoked by the user (button click) or after a Disconnect Event was triggered.
         if (AcquisitionThread != null)
@@ -606,12 +530,9 @@ public class PluxDeviceManager
                 InterruptAcquisition();
 
                 // Wait for the communication of the flag stating the end of the communication loop.
-                bool communicationFlag = GetCommunicationFlag();
+                var communicationFlag = GetCommunicationFlag();
                 Console.WriteLine("Communication Flag (After Interrupt): " + GetCommunicationFlag());
-                while (communicationFlag == true)
-                {
-                    communicationFlag = GetCommunicationFlag();
-                }
+                while (communicationFlag) communicationFlag = GetCommunicationFlag();
 
                 Console.WriteLine("Communication Flag (After Loop): " + GetCommunicationFlag());
 
@@ -664,7 +585,8 @@ public class PluxDeviceManager
     public void GetDetectableDevicesUnity(List<string> domains)
     {
         // Creation of new thread to manage the scanning stage.
-        ScanningThread = new Thread(() => ScanPluxDevs(domains)); ;
+        ScanningThread = new Thread(() => ScanPluxDevs(domains));
+        ;
         ScanningThread.Name = "SCANNING_" + currThreadNumber;
         currThreadNumber++;
         ScanningThread.Start();
@@ -680,13 +602,12 @@ public class PluxDeviceManager
         try
         {
             // Search for BLE and BTH devices.
-            List<string> listDevices = new List<string>();
-            List<String> devicesFound = PluxDevsFound.Value;
+            var listDevices = new List<string>();
+            var devicesFound = PluxDevsFound.Value;
 
             // Clear previous content of the device list.
             devicesFound.Clear();
-            for (int domainNbr = 0; domainNbr < domains.Count; domainNbr++)
-            {
+            for (var domainNbr = 0; domainNbr < domains.Count; domainNbr++)
                 try
                 {
                     // List of available Devices.
@@ -700,7 +621,6 @@ public class PluxDeviceManager
                 {
                     Debug.Log("Unexpected Exception raised: " + exception);
                 }
-            }
 
             // Send data (list of devices found) to the MAIN THREAD.
             UnityThreadHelper.Dispatcher.Dispatch(() => ScanResultsCallback(devicesFound));
@@ -708,7 +628,7 @@ public class PluxDeviceManager
         catch (ExecutionEngineException exc)
         {
             Debug.Log("Exception found while scanning: \n" + exc.Message + "\n" + exc.StackTrace);
-            BufferAcqSamples bufferedSamples = LazyObject.Value;
+            var bufferedSamples = LazyObject.Value;
             lock (bufferedSamples)
             {
                 bufferedSamples.actUncaughtException();
@@ -720,7 +640,8 @@ public class PluxDeviceManager
     // onRawFrameHandler -> Callback function invoked every time a new package of RAW data samples is transmitted by the API.
     // onEventDetectedHandler -> Callback invoked when an event is raised by the PLUX API.
     // onExceptionRaisedHandler -> Callback invoked when an exception is raised by the PLUX API.
-    private bool SetCallbackHandler(OnRawFrame onRawFrameHandler, OnEventDetected onEventDetectedHandler, OnExceptionRaised onExceptionRaisedHandler)
+    private bool SetCallbackHandler(OnRawFrame onRawFrameHandler, OnEventDetected onEventDetectedHandler,
+        OnExceptionRaised onExceptionRaisedHandler)
     {
         callbackPointer = new CallbackManager(onRawFrameHandler, onEventDetectedHandler, onExceptionRaisedHandler);
         return true;
@@ -733,9 +654,9 @@ public class PluxDeviceManager
     public void SetParameter(int port, int index, int[] data)
     {
         // >>> Garbage collector memory management.
-        GCHandle pinnedArray = GCHandle.Alloc(data, GCHandleType.Pinned);
+        var pinnedArray = GCHandle.Alloc(data, GCHandleType.Pinned);
         // >>> Convert to a memory address.
-        IntPtr ptr = pinnedArray.AddrOfPinnedObject();
+        var ptr = pinnedArray.AddrOfPinnedObject();
         // >>> Call correspondent .dll method to set the parameter value.
         SetParameter(port, index, ptr, data.Length);
         // >>> Releasing memory.
@@ -778,13 +699,166 @@ public class PluxDeviceManager
         return Marshal.PtrToStringAnsi(GetDeviceType());
     }
 
+    /**
+     * Auxiliary method used to reboot the buffer responsible for storing the packages of collected data.
+     */
+    public void RebootDataBuffer()
+    {
+        // Clear the buffer containing the packages of collected data.
+        // Lock is an essential step to ensure that variables shared by the same thread will not be accessed at the same time.
+        var bufferedSamples = LazyObject.Value;
+        lock (bufferedSamples)
+        {
+            bufferedSamples.reboot();
+        }
+    }
+
+    // Auxiliary method that ensures a secure lock.
+    // https://www.pluralsight.com/guides/lock-statement-best-practices
+    private object InitializeIfNeeded()
+    {
+        if (DoubleCheckLock == null)
+            lock (BufferedSamples)
+            {
+                if (DoubleCheckLock == null) DoubleCheckLock = true;
+            }
+
+        return DoubleCheckLock;
+    }
+
+    // Factory for our Multi-Thread lazy object.
+    private static BufferAcqSamples InitBufferedSamplesObject()
+    {
+        var lazyComponent = new BufferAcqSamples();
+        return lazyComponent;
+    }
+
+    private static List<string> InitiListDevFound()
+    {
+        var devFound = new List<string>();
+        return devFound;
+    }
+
+    // Declaration of a Plux::Source structure shared with the .dll.
+    [StructLayout(LayoutKind.Sequential)]
+    public struct PluxSource
+    {
+        public int port;
+        public int freqDivisor;
+        public int nBits;
+        public int chMask;
+
+        // Constructor responsible for the creation of a Plux::Source.
+        // port -> Source port (1...8 for analog ports). Default value is zero.
+        // freqDivisor -> Source frequency divisor from acquisition base frequency (>= 1). Default value is 1.
+        // nBits -> Source sampling resolution in bits (8 or 16). Default value is 16.
+        // chMask -> Bitmask of source channels to sample (bit 0 is channel 0, etc). Default value is 1 (channel 0 only).
+        public PluxSource(int port = 0, int freqDivisor = 1, int nBits = 16, int chMask = 1)
+        {
+            this.port = port;
+            this.freqDivisor = freqDivisor;
+            this.nBits = nBits;
+            this.chMask = chMask;
+        }
+    }
+
+    // Declaration of the Plux::Event class.
+    public class PluxEvent
+    {
+        // Enumerator defining the types of events that can be raised by the PLUX API.
+        public enum PluxEvents
+        {
+            DigInUpdate = 3, // Digital Input Updated
+            Disconnect = 8 // Disconnect Event
+        }
+
+        public PluxEvents type;
+
+        // Constructor responsible for the creation of a Plux::Event.
+        // type -> PluxEvents enumerator key that identifies the type of event under analysis.
+        public PluxEvent(PluxEvents type)
+        {
+            this.type = type;
+        }
+    }
+
+    // Declaration of a Plux::DigInUpdateEvent structure shared with the .dll.
+    public class PluxDigInUpdateEvent : PluxEvent
+    {
+        public int channel;
+        public bool state;
+
+        public PluxClock timestamp;
+
+
+        // Constructor responsible for the creation of a Plux::EvtDigInUpdate.
+        // timestamp -> Event timestamp.
+        // channel -> The digital input which changed state, starting at zero.
+        // state -> New state of digital port input. If true, new state is High, otherwise it is Low.
+        public PluxDigInUpdateEvent(PluxClock timestamp, int channel, bool state) : base(PluxEvents.DigInUpdate)
+        {
+            this.timestamp = timestamp;
+            this.channel = channel;
+            this.state = state;
+        }
+
+        // Event timestamp class.
+        public struct PluxClock
+        {
+            // Enumerator defining the available clock sources used in the PluxDigInUpdateEvent.
+            public enum ClockSources
+            {
+                None,
+                RTC,
+                FrameCount,
+                Bluetooth
+            }
+
+            public ClockSources source;
+            public int value;
+
+            // Constructor responsible for the creation of a Plux::Clock.
+            // source -> Clock source for the current timestamp.
+            // value -> Timestamp value.
+            public PluxClock(ClockSources source = ClockSources.None, int value = 0)
+            {
+                this.source = source;
+                this.value = value;
+            }
+        }
+    }
+
+    // Declaration of a Plux::EvtDisconnect structure shared with the .dll.
+    public class PluxDisconnectEvent : PluxEvent
+    {
+        /// Disconnect reason enumeration.
+        public enum PluxDisconnectReason
+        {
+            Timeout = 1, // Connection timeout has elapsed.
+            ButtonPressed = 2, // Device button was pressed.
+            BatDischarged = 4 // Device battery is discharged.
+        }
+
+        public PluxDisconnectReason reason;
+
+
+        // Constructor responsible for the creation of a Plux::EvtDigInUpdate.
+        // reason -> Reason for the device disconnection.
+        public PluxDisconnectEvent(PluxDisconnectReason reason) : base(PluxEvents.Disconnect)
+        {
+            this.reason = reason;
+        }
+    }
+
     // Class that manages the reference to callbackPointer.
     public class CallbackManager
     {
-        public OnRawFrame onRawFrameReference;
         public OnEventDetected onEventDetectedReference;
         public OnExceptionRaised OnExceptionRaisedReference;
-        public CallbackManager(OnRawFrame onRawFrameHandler, OnEventDetected onEventDetectedHandler, OnExceptionRaised onExceptionRaisedHandler)
+        public OnRawFrame onRawFrameReference;
+
+        public CallbackManager(OnRawFrame onRawFrameHandler, OnEventDetected onEventDetectedHandler,
+            OnExceptionRaised onExceptionRaisedHandler)
         {
             onRawFrameReference = onRawFrameHandler;
             onEventDetectedReference = onEventDetectedHandler;
@@ -795,17 +869,18 @@ public class PluxDeviceManager
     // Auxiliary subclass that works as a buffer of received samples.
     public class BufferAcqSamples
     {
-        private int comCounter = 0;
-        private int[][] packagesOfData;
-        private int maxNbrSamples = 10000;
-        private bool rebootOnNextPackage = false;
-        private bool uncaugthException = false;
+        private readonly int maxNbrSamples = 10000;
+        private int comCounter;
         private int lastNSeq = -1;
+        private int[][] packagesOfData;
+        private bool rebootOnNextPackage;
+        private bool uncaugthException;
 
         // Class constructor.
         public BufferAcqSamples()
         {
-            packagesOfData = new int[maxNbrSamples][]; // Stores 10 seconds of data in data acquisitions of 1000 Hz sampling rate.
+            packagesOfData =
+                new int[maxNbrSamples][]; // Stores 10 seconds of data in data acquisitions of 1000 Hz sampling rate.
         }
 
         // An important method that ensures the reinitialisation of the class variables.
@@ -825,14 +900,10 @@ public class PluxDeviceManager
         {
             // Check if the new package of data is the valid one, i.e., if it is the one immediately after the last received package.
             if (nSeq <= lastNSeq || nSeq > lastNSeq + 1)
-            {
                 actUncaughtException();
-            }
             else
-            {
                 lastNSeq = nSeq;
-            }
-            
+
             // Reboot buffer if the controlling flag is true.
             if (rebootOnNextPackage)
             {
@@ -853,6 +924,7 @@ public class PluxDeviceManager
                 // Decrement counter.
                 decrement();
             }
+
             packagesOfData[comCounter] = newPackage;
 
             // Update counter.
@@ -882,7 +954,7 @@ public class PluxDeviceManager
         {
             comCounter--;
         }
-           
+
         // Method used to reboot the object memory.
         public void reboot()
         {
@@ -910,14 +982,11 @@ public class PluxDeviceManager
         public int[][] getPackages(bool rebootMemory)
         {
             // Check if the array is not empty.
-            if (packagesOfData[0] == null)
-            {
-                return null;
-            }
+            if (packagesOfData[0] == null) return null;
             // Send the filled section of the array.
-            else if (comCounter != maxNbrSamples)
+            if (comCounter != maxNbrSamples)
             {
-                int[][] tempArray = new int[comCounter][];
+                var tempArray = new int[comCounter][];
                 Array.Copy(packagesOfData, 0, tempArray, 0, comCounter);
 
                 // Update flag.
@@ -925,13 +994,11 @@ public class PluxDeviceManager
 
                 return tempArray;
             }
-            else
-            {
-                // Update flag.
-                rebootOnNextPackage = rebootMemory;
 
-                return packagesOfData;
-            }
+            // Update flag.
+            rebootOnNextPackage = rebootMemory;
+
+            return packagesOfData;
         }
 
         // Get Uncaught Exception state.
@@ -939,50 +1006,5 @@ public class PluxDeviceManager
         {
             return uncaugthException;
         }
-    }
-
-    /**
-     * Auxiliary method used to reboot the buffer responsible for storing the packages of collected data.
-     */
-    public void RebootDataBuffer()
-    {
-        // Clear the buffer containing the packages of collected data.
-        // Lock is an essential step to ensure that variables shared by the same thread will not be accessed at the same time.
-        BufferAcqSamples bufferedSamples = LazyObject.Value;
-        lock (bufferedSamples)
-        {
-            bufferedSamples.reboot();
-        }
-    }
-
-    // Auxiliary method that ensures a secure lock.
-    // https://www.pluralsight.com/guides/lock-statement-best-practices
-    private object InitializeIfNeeded()
-    {
-        if (DoubleCheckLock == null)
-        {
-            lock (BufferedSamples)
-            {
-                if (DoubleCheckLock == null)
-                {
-                    DoubleCheckLock = true;
-                }
-            }
-        }
-
-        return DoubleCheckLock;
-    }
-
-    // Factory for our Multi-Thread lazy object.
-    static BufferAcqSamples InitBufferedSamplesObject()
-    {
-        BufferAcqSamples lazyComponent = new BufferAcqSamples();
-        return lazyComponent;
-    }
-
-    static List<String> InitiListDevFound()
-    {
-        List<String> devFound = new List<string>();
-        return devFound;
     }
 }

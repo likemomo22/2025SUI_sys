@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using MuscleCircleController;
 using Utils;
 
 public class MuscleCircleManager : MonoBehaviour
@@ -8,19 +7,17 @@ public class MuscleCircleManager : MonoBehaviour
 
     private PluxDataProcessor processor;
 
-    void Start()
+    private void Start()
     {
         // 初始化 3 通道处理器
-        processor = new PluxDataProcessor(channelCount: 3);
+        processor = new PluxDataProcessor(3);
         processor.OnSmoothedValueChanged += OnSmoothedValue;
     }
 
-    void OnSmoothedValue(int channelIndex, float value)
+    private void OnSmoothedValue(int channelIndex, float value)
     {
         if (channelIndex < controllers.Length && controllers[channelIndex] != null)
-        {
             controllers[channelIndex].SetValue(value);
-        }
     }
 
     // 从外部传入 rawData，通常在 Update() 或外部调用
