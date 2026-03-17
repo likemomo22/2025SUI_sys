@@ -6,80 +6,89 @@ using utils;
 namespace Utils
 {
     /// <summary>
-    /// Plux 肌电数据处理器：
-    /// 用于对多通道肌电原始数据进行平滑处理，并触发平滑后的数据回调。
-    /// 内部通过多个 ChannelProcessor 来分别处理每个通道的数据。
+    ///     Plux 多通道肌电处理器：
+    ///     负责对原始 EMG 数据进行：
+    ///     1) 去基线
+    ///     2) 全波整流
+    ///     3) （可选）夸张增强
+    ///     4) RMS + EMA 平滑
+    ///     并通过事件向外部输出每个通道的平滑值。
     /// </summary>
     public class PluxDataProcessor
     {
-        // 存储每个通道对应的处理器
-        private readonly List<ChannelProcessor> channelProcessors = new();
+        private readonly List<ChannelProcessor> _channelProcessors = new();
 
         /// <summary>
-        /// 构造函数
-        /// channelCount: 通道数量（如 Plux 设备有几个肌电通道）
-        /// windowSize: 平滑窗口大小（用于短时间平均）
-        /// alpha: 指数平滑系数（越大越敏感，越小越平滑）
+        ///     初始化多通道肌电处理器
+        /// 这里是默认值
         /// </summary>
-        public PluxDataProcessor(int channelCount, int windowSize = 100, float alpha = 0.008f)
+        public PluxDataProcessor(int channelCount, int windowSize = 100, float alpha = 0.005f)
+        // public PluxDataProcessor(int channelCount, int windowSize = 6, float alpha = 0.5f)
         {
             for (var i = 0; i < channelCount; i++)
             {
-                // 为每个通道创建独立处理器
                 var processor = new ChannelProcessor(windowSize, alpha);
                 var channelIndex = i;
 
-                // 订阅平滑事件：当通道计算出平滑值后触发
-                processor.OnValueSmoothed += smoothed =>
+                // 订阅：当某个通道得出平滑值时触发
+                processor.OnValueSmoothed += smoothedValue =>
                 {
-                    // 将通道索引 + 平滑值，通过事件往外通知
-                    OnSmoothedValueChanged?.Invoke(channelIndex, smoothed);
+                    OnSmoothedValueChanged?.Invoke(channelIndex, smoothedValue);
                 };
 
-                channelProcessors.Add(processor);
+                _channelProcessors.Add(processor);
             }
         }
 
-        // 通道数据平滑值更新事件
-        // int: 通道索引
-        // float: 平滑后的值
+        /// <summary>
+        ///     对外输出通道平滑后的肌电值
+        ///     int: 通道索引
+        ///     float: 平滑后的值
+        /// </summary>
         public event Action<int, float> OnSmoothedValueChanged;
 
         /// <summary>
-        /// 外部传入原始肌电数据（int 数组）
-        /// 每次调用代表一次采样帧，数组长度对应通道数量
+        ///     传入一次原始肌电数据（对应本次采样的所有通道）
         /// </summary>
         public void Process(int[] rawData)
         {
-            // 数据为空保护
-            if (rawData == null || rawData.Length == 0) return;
+            if (rawData == null || rawData.Length == 0)
+                return;
 
-            // 遍历每个通道的原始数据
-            for (var i = 0; i < rawData.Length && i < channelProcessors.Count; i++)
-                // Plux 原始值默认基准（无信号）为 32768，因此需过滤
-                if (rawData[i] > 32768)
-                {
-                    // 去基准偏移，获得真实肌电幅值
-                    var fixedValue = rawData[i] - 32768;
+            var channelCount = Math.Min(rawData.Length, _channelProcessors.Count);
 
-                    // 如果当前实验类型为 2 且不是通道1（即 i!=0）
-                    // 对除通道1外的值进行系数放大（用于代偿肌的强调显示）
-                    if (GlobalText.examType == "2" && i != 0)
-                        fixedValue = Mathf.RoundToInt(fixedValue * GlobalText.exaggerateRate); // 注：这里目前是1.0倍（可调整）
-                    Debug.Log(fixedValue);
-                    // 加入通道处理器进行平滑计算
-                    channelProcessors[i].AddValue(fixedValue);
-                }
+            for (var i = 0; i < channelCount; i++)
+            {
+                // --------------------
+                // 1) 去基线：Plux基线为32768
+                // --------------------
+                var diff = rawData[i] - 32768;
+
+                // --------------------
+                // 2) 全波整流
+                // --------------------
+                var amp = Mathf.Abs(diff);
+
+                // --------------------
+                // 3) 对代偿肌进行强度夸张（可调）
+                // --------------------
+                if (i != 0)
+                    amp = Mathf.RoundToInt(amp * GlobalText.exaggerateRate);
+
+                // --------------------
+                // 4) 丢入通道处理器（RMS + EMA）
+                // --------------------
+                _channelProcessors[i].AddValue(amp);
+            }
         }
 
         /// <summary>
-        /// 重置所有通道的缓存与状态
-        /// 用于重新开始实验或清空历史数据
+        ///     清空所有通道历史数据（重新开始实验时调用）
         /// </summary>
         public void Reset()
         {
-            foreach (var processor in channelProcessors)
-                processor.Reset();
+            foreach (var p in _channelProcessors)
+                p.Reset();
         }
     }
 }

@@ -30,26 +30,37 @@ namespace SetIdType
         {
             var userId = userIdText.text;
             GlobalText.userId = userId;
+
+            Debug.Log($"[SetIdType] userId 设置成功：{GlobalText.userId}");
         }
 
         private void OnInputTypeButtonClick()
         {
             var examType = typeText.text;
             GlobalText.examType = examType;
+
+            Debug.Log($"[SetIdType] examType 设置成功：{GlobalText.examType}");
         }
 
         private void OnConfirmButtonClick()
         {
             var maxValueTimes = maxValueTimesText.text;
             GlobalText.maxValueTimes = maxValueTimes;
+
+            Debug.Log($"[SetIdType] maxValueTimes 设置成功：{GlobalText.maxValueTimes}");
         }
 
         private void OnExaggerateRateButtonClick()
         {
             if (float.TryParse(exaggerateRateText.text, out var exaggerateRate))
+            {
                 GlobalText.exaggerateRate = exaggerateRate;
+                Debug.Log($"[SetIdType] exaggerateRate 设置成功：{GlobalText.exaggerateRate}");
+            }
             else
-                Debug.LogError("输入的 exaggerateRate 不是有效数字！");
+            {
+                Debug.LogError("[SetIdType] 输入的 exaggerateRate 不是有效数字！");
+            }
         }
     }
 }

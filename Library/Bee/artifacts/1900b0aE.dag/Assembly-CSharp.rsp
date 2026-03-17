@@ -370,7 +370,6 @@
 "Assets/Scripts/MainCanvasver2/UIControl/CircleVisible/SetCircleVisible.cs"
 "Assets/Scripts/MirrorCanvasScript/CameraDisplay.cs"
 "Assets/Scripts/MuscleCircleController/MuscleCircleController.cs"
-"Assets/Scripts/MuscleCircleManager/MuscleCircleManager.cs"
 "Assets/Scripts/PluxController/PluxUIController.cs"
 "Assets/Scripts/PluxDeviceManager/PluxDeviceManager.cs"
 "Assets/Scripts/PluxDeviceManager/utils/ActionExtension.cs"
@@ -394,6 +393,7 @@
 "Assets/utils/MathUtils.cs"
 "Assets/utils/PluxDataProcessor.cs"
 "Assets/utils/PoseLandmarkTracker.cs"
+"Assets/utils/SetExaggrateRate.cs"
 "Assets/utils/testGlobal.cs"
 "Assets/utils/UIDotUtils.cs"
 -langversion:9.0
